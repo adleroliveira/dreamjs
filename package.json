@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/adleroliveira/dreamjs#readme",
   "dependencies": {
-    "lodash": "^3.10.1"
+    "chance": "^0.8.0",
+    "lodash": "^3.10.1",
+    "randexp": "^0.4.1"
   }
 }
