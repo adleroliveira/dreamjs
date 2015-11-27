@@ -24,6 +24,7 @@
   "homepage": "https://github.com/adleroliveira/dreamjs#readme",
   "dependencies": {
     "chance": "^0.8.0",
+    "describe-json": "0.0.6",
     "lodash": "^3.10.1",
     "randexp": "^0.4.1"
   }

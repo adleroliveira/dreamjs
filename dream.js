@@ -1,181 +1,249 @@
-var _ = require('lodash');
-var RandExp = require('randexp');
-var generateRnd = require('./generateRnd').generateRnd;
+'use strict'
+
+var
+  _ = require('lodash'),
+  RandExp = require('randexp'),
+  generateRnd = require('./generateRnd').generateRnd,
+  djson = require('describe-json');
 
 var Dream = (function () {
 
-    var d = this;
+  this._selectedSchema;
 
-    d._input;
-    d._output;
-    d._useSchema;
-    d._selectedSchema;
-    
-    d._genericSchema = {
-        name: 'generic',
-        schema: {}
-    };
-    
-    d.defaultOutput = {
-        dream: 'Hello World!'
-    };
+  this._output;
 
-    Dream.schemas = [];
-    Dream.customTypes = [];
+  this._schemas = [];
 
-    Dream.input = function (i) {
-        d._input = i || d.defaultOutput;
-        return this;
-    };
+  this._defaultOutput = {
+    Dream: 'Hello World'
+  };
 
-    Dream.output = function (cb) {
-        var output = d._output || generateOutput();
-        if(typeof(cb) === 'function'){
-            cb(output);
-            return this;
-        }else{
-            return output;
-        }
-    };
+  this._genericSchema = {
+    name: 'generic',
+    schema: {
+      default: String
+    }
+  };
 
-    Dream.schema = function (schemaName, schema) {
-        var sch;
-        var args = [];
-        Array.prototype.push.apply(args, arguments);
+  Dream.defaultSchema = function defaultSchema(schema) {
+    this._genericSchema = validateAndReturnSchema(schema);
+    return Dream;
+  }.bind(this);
 
-        sch = {
-            name: typeof (args[0]) === 'string' ? args.shift() : 'generic',
-            schema: args.length ? args.shift() : {}
-        };
+  Dream.useSchema = function useSchema(schema) {
+    var schemaToUse;
+    schemaToUse = validateAndReturnSchema(schema);
+    Dream.schema(schemaToUse);
+    this._selectedSchema = schemaToUse;
+    return Dream;
+  }.bind(this);
 
-        Dream.schemas.push(sch);
-        selectSchemaIfPossible();
+  Dream.defaultOutput = {
+    dream: 'Hello World!'
+  };
 
-        return this;
-    };
+  Dream.output = function output(callback) {
+    var output;
 
-    Dream.useSchema = function (schema) {
-        var sch = validateAndReturnSchema(schema);
-        // TODO  verify if a generic schema already exists and then replace it
-        Dream.schemas.push(sch);
-        d._selectedSchema = sch;
-        return this;
-    };
+    output = this._output || generateOutput();
 
-    Dream.generate = function (c) {
-        var count = c || 1;
-        var outputArray = [];
-        selectSchemaIfPossible();
-        for (var i = 0; i < count; i++) {
-            outputArray.push(generateOutputFromSchema(d._selectedSchema));
-        };
-        d._output = outputArray;
-        return this;
-    };
-    
-    Dream.generateRnd = function (c) {
-        var count = c || 1;
-        var outputArray = [];
-        selectSchemaIfPossible();
-        for (var i = 0; i < count; i++) {
-            outputArray.push(generateOutputFromSchema(d._selectedSchema, true));
-        };
-        d._output = outputArray;
-        return this;
-    };
-    
-    Dream.genericSchema = function(schema){
-        d._genericSchema = validateAndReturnSchema(schema);
-        return this;
-    };
-    
-    Dream.CustomType = function(customType){
-        Dream.customTypes.push(customType);
-        return this;
-    };
-    
-    
-    var generateOutput = function () {
+    if (typeof (callback) === 'function') {
+      callback(null, output);
+      return Dream;
+    } else {
+      return output;
+    }
 
-        d._output = d._input;
-        
-        if(d._selectedSchema){
-            d._output = generateOutputFromSchema(d._selectedSchema);
-        }
-        
-        return d._output || d.defaultOutput;
-    };
-    
-    var selectSchemaIfPossible = function(){
-        if(!d._selectedSchema && schemaExists()){
-            d._selectedSchema = Dream.schemas.length === 1 ? Dream.schemas[0] : d._genericSchema;
-        };
-        
-        if(Dream.schemas.length > 1) d._selectedSchema = d._genericSchema;
-    };
+  }.bind(this);
 
-    var generateOutputFromSchema = function (schema, genValues) {
-        var outputObject = {};
-        var generateValue = genValues || false;
-        
-        var sch = validateAndReturnSchema(schema);
-        _.forIn(sch.schema, function (value, key) {
-            outputObject[key] = getValueFromType(value, generateValue);
-        });
-        return outputObject;
-    };
-    
-    var schemaExists = function(){
-        return Dream.schemas.length > 0;
-    };
+  Dream.schema = function schema(schema) {
+    var
+      validatedSchema,
+      schemaIndex,
+      newSchema,
+      args = [];
 
-    var getValueFromType = function (t, genValue) {
-        var generateValue = genValue || false;
-        
-        var tp = {
-            'number' : Number,
-            'string' : String,
-            'bool' : Boolean,
-            'array' : Array,
-            'object' : Object,
-            'function' :  Function
-        };
-        
-        if(typeof(t) === 'string' && !_.has(generateRnd, t)) t = 'string';
-        
-        if(generateValue){
-            return typeof(t) === 'string' ? generateRnd[t]() : generateRnd[typeof(t())]();
-        }else{
-            return typeof(t) === 'string' ? tp[typeof(generateRnd[t]())]() : t();
-        }
-    };
-    
-    var validateAndReturnSchema = function(schema){
-        if(typeof (schema) === 'string'){
-            var foundSchema = _.findWhere(Dream.schemas, {name: schema});
-            return isValidSchema(foundSchema) ? foundSchema : d._genericSchema;
-        };
-        
-        if(isValidSchema(schema)) return schema;
-        
-        return {
-            name: 'generic',
-            schema: schema
-        };
-    };
-    
-    var isValidSchema = function(schema){
-        return _.has(schema, 'name') && _.has(schema, 'schema');
-    };
-    
+    Array.prototype.push.apply(args, arguments);
 
-    function Dream() {
+    if (args.length > 1) {
+      newSchema = {
+        name: typeof (args[0]) === 'string' ? args.shift() : 'generic',
+        schema: typeof (args[0]) === 'object' ? args.shift() : {}
+      };
+    } else {
+      newSchema = schema;
+    }
 
+    validatedSchema = validateAndReturnSchema(newSchema);
+    schemaIndex = _.indexOf(this._schemas, _.find(this._schemas, { name: validatedSchema.name }));
+
+    if (schemaIndex >= 0) {
+      this._schemas.splice(schemaIndex, 1, validatedSchema);
+    } else {
+      this._schemas.push(validatedSchema);
     };
 
     return Dream;
+  }.bind(this);
 
-})();
+  Dream.generate = function generate(amount, generateRandomData) {
+    var
+      outputItem,
+      itarations = amount || 1,
+      outputArray = [],
+      i = 0;
+
+    for (; i < itarations; i++) {
+      outputItem = generateOutputFromSchema(selectAvailableSchema(), generateRandomData)
+      outputArray.push(outputItem);
+    };
+
+    this._output = outputArray;
+    return Dream;
+  }.bind(this);
+
+  Dream.generateRnd = function generateRnd(amount) {
+    return Dream.generate(amount, true);
+  };
+
+  var validateAndReturnSchema = function validateAndReturnSchema(schema) {
+    if (isValidSchema(schema)) return schema;
+
+    if (typeof (schema) === 'string') {
+      var foundSchema = _.findWhere(this._schemas, { name: schema });
+      return isValidSchema(foundSchema) ? foundSchema : this._genericSchema;
+    };
+
+    if (typeof (schema) === 'object') {
+      return {
+        name: 'generic',
+        schema: schema
+      };
+    };
+
+    return this._genericSchema;
+  }.bind(this);
+
+  var selectAvailableSchema = function selectAvailableSchema() {
+    if (this._selectedSchema) {
+      return this._selectedSchema;
+    };
+
+    if (thereIsSchema() && this._schemas.length === 1) {
+      return this._schemas[0];
+    };
+
+    return this.defaultSchema;
+  }.bind(this);
+
+  var generateOutput = function generateOutput() {
+    var schemaToUse;
+
+    if (thereIsSchema()) {
+      schemaToUse = selectAvailableSchema();
+      this._output = generateOutputFromSchema(schemaToUse);
+    } else {
+      this._output = this._defaultOutput;
+    }
+
+    return this._output;
+  }.bind(this);
+
+  var generateOutputFromSchema = function generateOutputFromSchema(schema, generateValues) {
+    var outputObject = {};
+    var schemaToUse = validateAndReturnSchema(schema);
+    _.forIn(schemaToUse.schema, function (value, key) {
+      outputObject[key] = getValueFromType(value, generateValues);
+    });
+    return outputObject;
+  };
+
+  var getValueFromType = function getValueFromType(propertyType, generateValues) {
+    var
+      value,
+      temporaryList = [],
+      temporaryObject = {},
+      temporaryValue,
+      temporaryDate,
+      types = {
+        'number': Number,
+        'string': String,
+        'bool': Boolean,
+        'array': Array,
+        'object': Object,
+        'function': Function,
+        'date': Date
+      };
+
+    if (typeof (propertyType) === 'string' && !_.has(generateRnd, propertyType)) {
+      propertyType = 'string';
+    }
+
+    switch (typeof (propertyType)) {
+      case 'string':
+
+        if (generateValues) {
+          value = generateRnd[propertyType]();
+        } else {
+          value = types[typeof (generateRnd[propertyType]())]();
+        }
+
+        break;
+      case 'function':
+
+        if (generateValues) {
+          temporaryValue = propertyType();
+          temporaryDate = new Date(temporaryValue);
+          
+          if(!isNaN(temporaryDate.valueOf())){
+            value = generateRnd['date']();
+          }else{
+            value = generateRnd[typeof (propertyType())]();
+          }
+          
+        } else {
+          value = propertyType();
+        }
+
+        break;
+      case 'object':
+
+        if (Array.isArray(propertyType)) {
+          propertyType.forEach(function (item) {
+            temporaryList.push(getValueFromType(item, generateValues));
+          });
+
+          value = temporaryList;
+        } else {
+          _.forIn(propertyType, function (value, key) {
+            temporaryObject[key] = getValueFromType(value, generateValues);
+          });
+
+          value = temporaryObject;
+        };
+
+        break;
+      default:
+        value = '[Invalid Property]';
+    }
+
+    return value;
+  };
+
+  var isValidSchema = function isValidSchema(schema) {
+    return _.has(schema, 'name') && _.has(schema, 'schema');
+  };
+
+  var thereIsSchema = function thereIsSchema() {
+    return this._schemas.length > 0;
+  }.bind(this);
+
+  function Dream() {
+
+  };
+
+  return Dream;
+
+}.bind(this))();
 
 module.exports = Dream;
-

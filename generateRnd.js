@@ -75,5 +75,17 @@ module.exports.generateRnd = {
 	
 	paragraph : function(){
 		return chance.paragraph();
+	},
+	
+	date: function(){
+		return chance.date({string: true});
+	},
+	
+	word: function(){
+		return chance.word();
+	},
+	
+	sentence: function(){
+		return chance.sentence();
 	}
 }
