@@ -38,10 +38,6 @@ var Dream = (function () {
     return Dream;
   }.bind(this);
 
-  Dream.defaultOutput = {
-    dream: 'Hello World!'
-  };
-
   Dream.output = function output(callback) {
     var output;
 
