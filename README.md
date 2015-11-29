@@ -5,9 +5,9 @@
 
 This library can output random data from a Json Schema using standard types like String, Number, Date, Boolean, Array, or with the 60+ built-in custom types like Name, Age, Address, Word, Sentence, paragraph, gender, (RGB) color etc.
 
-The build in custom types are mostly provided by the module [Chance][Chance] but the library also allows you to create your own custom types.
+The built-in Custom Types are mostly provided by the module [Chance][Chance] but the library also allows you to create your own Custom Types.
 
-The library allows for the creation of multple Schemas that can be selected before usage. It is also chainable, meaning that you can chain several configurations before finaly output the processed json.
+It can be used with multple Schemas that can be selected before usage. It is also chainable, meaning that you can chain several configurations before finaly output the processed json.
 
 ## Usage
 
