@@ -104,7 +104,7 @@ The variable data1 and data2 now contains:
 ### Custom Types
 Dream comes with the power of the [Chance][Chance] library integrated with it and allow you tu use their 60+ random generator as built-in Custom Types. It is also posible to create your own Custom Types by just passing a function or a RegularExpression statement as the Type on the Schema.
 
-A full list of all the posible Custom Types provided by chance can be found on their website: [http://chancejs.com/]
+A full list of all the posible Custom Types provided by chance can be found on their website: http://chancejs.com/
 ```js
 dream
 	.schema({
