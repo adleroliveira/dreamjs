@@ -1,6 +1,6 @@
 # Dream
 #### A lightweight json data generator.
-This library can output random data from a Json Schema using standard types like String, Number, Date, Boolean, Array, or with the 30+ built in custom types like Name, Age, Address, Word, Sentence, paragraph, gender, (RGB) color etc.
+This library can output random data from a Json Schema using standard types like String, Number, Date, Boolean, Array, or with the 60+ built-in custom types like Name, Age, Address, Word, Sentence, paragraph, gender, (RGB) color etc.
 
 The build in custom types are mostly provided by the module [Chance][Chance] but the library also allows you to create your own custom types.
 
@@ -18,6 +18,20 @@ var helloword = dream.output();
 The variable helloword now contains:
 ```js
 { Dream: 'Hello World' }
+```
+
+### Callbacks
+Currently there is two ways you can get the output from Dream. By storing it in a variable or by passing a callback to it to receive the result. In the future it will also be possible to use it with Promises and Streams.
+
+Storing in a variable:
+```js
+var helloword = dream.output();
+```
+Passing a callback:
+```js
+dream.output(function(err, result){
+	console.log(result);
+});
 ```
 
 ### Generic Schema / Named Schema
@@ -57,8 +71,8 @@ The variable data now contains:
 { address: '', postcode: 0 }
 ```
 
-### Generate and GenerateRnd
-The methods Generate and GenerateRnd will generate a given amount of instances of the selected Schema respecting the data types specified on the Schema. The method Genrate will bring empty values and the method Generate will bring values with random data.
+### Generate() and GenerateRnd()
+The methods Generate() and GenerateRnd() will generate a given amount of instances of the selected Schema respecting the data types specified on the Schema. The method Generate() will bring empty values and the method GenerateRnd() will bring values with random data.
 
 
 ```js
@@ -67,12 +81,12 @@ dream.schema('User',{
 });
 
 var data1 = dream
-	.useSchema('user')
+	.useSchema('User')
 	.generate(3)
 	.output();
 	
 var data2 = dream
-	.useSchema('user')
+	.useSchema('User')
 	.generateRnd(3)
 	.output();
 ```
@@ -86,4 +100,53 @@ The variable data1 and data2 now contains:
 [ { name: 'Jlxokrs'}, { name: 'oHiklkss'}, { name: 'mNeiOlsaa' } ]
 ```
 
+
+### Custom Types
+Dream comes with the power of the [Chance][Chance] library integrated with it and allow you tu use their 60+ random generator as built-in Custom Types. It is also posible to create your own custom types by just passing a function or a RegularExpression statement as the Type on the Schema.
+
+```js
+dream
+	.schema({
+		name: 'name',
+		age: 'age',
+		address: 'address',
+		contact: {
+			phone: 'phone',
+			servicePhone: /^(800[1-9]{6})$/,
+		}
+		foo: function(){
+			return 'bar';
+		}
+	})
+	.generateRnd(2)
+	.output(function(err, result){		
+		console.log(result);		
+	});
+```
+
+Result in:
+```js
+[
+	{ 
+		name: 'John',
+		age: 50,
+		address: '335 Ozda Highway',
+		contact: {
+			phone: '(823) 962-2040',
+			servicePhone: '800858523'
+		},
+		foo: 'bar'
+	},
+	{ 
+		name: 'Mary',
+		age: 37,
+		address: '681 Vasfih Road',
+		contact: {
+			phone: '(339) 869-1952',
+			servicePhone: '800458292'
+		},
+		foo: 'bar'
+	}
+]
+```
 [Chance]: http://chancejs.com/
