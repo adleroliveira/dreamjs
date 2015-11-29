@@ -1,8 +1,9 @@
 {
   "name": "dreamjs",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A lightweight json data generator, transformator and validator",
   "main": "dream.js",
+  "engine": "node >= 0.10.x",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
