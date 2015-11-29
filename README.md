@@ -114,7 +114,7 @@ dream
 		contact: {
 			phone: 'phone',
 			servicePhone: /^(800[1-9]{6})$/,
-		}
+		},
 		foo: function(){
 			return 'bar';
 		}

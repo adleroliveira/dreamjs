@@ -160,7 +160,6 @@ var Dream = (function () {
       temporaryList = [],
       temporaryObject = {},
       temporaryValue,
-      temporaryDate,
       types = {
         'number': Number,
         'string': String,
@@ -171,9 +170,17 @@ var Dream = (function () {
         'date': Date
       };
 
+    if (propertyType.constructor == RegExp) {
+      if (generateValues) {
+        return new RandExp(propertyType).gen();
+      } else {
+        return types[typeof (RandExp(propertyType).gen())]();
+      };
+    };
+
     if (typeof (propertyType) === 'string' && !_.has(generateRnd, propertyType)) {
       propertyType = 'string';
-    }
+    };
 
     switch (typeof (propertyType)) {
       case 'string':
@@ -187,18 +194,18 @@ var Dream = (function () {
         break;
       case 'function':
 
-        if (generateValues) {
-          temporaryValue = propertyType();
-          temporaryDate = new Date(temporaryValue);
+        temporaryValue = propertyType();
+        
+        if(isValueAdate(temporaryValue)){
+          value = new Date(temporaryValue);
+        }else{
           
-          if(!isNaN(temporaryDate.valueOf())){
-            value = generateRnd['date']();
+          if(generateValues){
+            value = temporaryValue;
           }else{
-            value = generateRnd[typeof (propertyType())]();
+            value = types[typeof (temporaryValue)]();
           }
           
-        } else {
-          value = propertyType();
         }
 
         break;
@@ -228,6 +235,12 @@ var Dream = (function () {
 
   var isValidSchema = function isValidSchema(schema) {
     return _.has(schema, 'name') && _.has(schema, 'schema');
+  };
+
+  var isValueAdate = function (value) {
+    var temporaryDate;
+    temporaryDate = new Date(value);
+    return !isNaN(temporaryDate.valueOf());
   };
 
   var thereIsSchema = function thereIsSchema() {
