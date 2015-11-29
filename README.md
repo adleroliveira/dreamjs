@@ -11,7 +11,7 @@ The library allows for the creation of multple Schemas that can be selected befo
 ### Hello World
 
 ```js
-var dream = require('./dream');
+var dream = require('dream');
 
 var helloword = dream.output();
 ```
@@ -48,7 +48,7 @@ The variable data now contains:
 { name: '' }
 ```
 
-It is also posible to create named Schemas and calling them when necessary
+It is also posible to create named Schemas and use them when necessary
 
 ```js
 dream.schema('User',{
@@ -102,7 +102,7 @@ The variable data1 and data2 now contains:
 
 
 ### Custom Types
-Dream comes with the power of the [Chance][Chance] library integrated with it and allow you tu use their 60+ random generator as built-in Custom Types. It is also posible to create your own custom types by just passing a function or a RegularExpression statement as the Type on the Schema.
+Dream comes with the power of the [Chance][Chance] library integrated with it and allow you tu use their 60+ random generator as built-in Custom Types. It is also posible to create your own Custom Types by just passing a function or a RegularExpression statement as the Type on the Schema.
 
 ```js
 dream
@@ -124,7 +124,7 @@ dream
 	});
 ```
 
-Result in:
+result is:
 ```js
 [
 	{ 
