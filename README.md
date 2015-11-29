@@ -13,9 +13,9 @@ The library allows for the creation of multple Schemas that can be selected befo
 ```js
 var dream = require('dream');
 
-var helloword = dream.output();
+var helloworld = dream.output();
 ```
-The variable helloword now contains:
+The variable helloworld now contains:
 ```js
 { Dream: 'Hello World' }
 ```
