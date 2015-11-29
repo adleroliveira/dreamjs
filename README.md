@@ -1,5 +1,8 @@
 # Dream
 #### A lightweight json data generator.
+
+[![Dream Logo](http://www.bodamarket.cl/logo_dream.png)](https://github.com/adleroliveira/dreamjs)
+
 This library can output random data from a Json Schema using standard types like String, Number, Date, Boolean, Array, or with the 60+ built-in custom types like Name, Age, Address, Word, Sentence, paragraph, gender, (RGB) color etc.
 
 The build in custom types are mostly provided by the module [Chance][Chance] but the library also allows you to create your own custom types.
