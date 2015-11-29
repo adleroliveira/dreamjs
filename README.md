@@ -24,7 +24,7 @@ The variable helloworld now contains:
 ```
 
 ### Callbacks
-Currently there is two ways you can get the output from Dream. By storing it in a variable or by passing a callback to it to receive the result. In the future it will also be possible to use it with Promises and Streams.
+Currently there is two ways you can get the output from DreamJS. By storing it in a variable or by passing a callback to it to receive the result. In the future it will also be possible to use it with Promises and Streams.
 
 Storing in a variable:
 ```js
@@ -38,7 +38,7 @@ dream.output(function(err, result){
 ```
 
 ### Generic Schema / Named Schema
-The simplest way to use Dream is by defining a generic schema. If any other generic Schema is created after that it will replace the previous one.
+The simplest way to use DreamJS is by defining a generic schema. If any other generic Schema is created after that it will replace the previous one.
 ```js
 var data = dream
 	.schema({
@@ -105,7 +105,7 @@ The variable data1 and data2 now contains:
 
 
 ### Custom Types
-Dream comes with the power of the [Chance][Chance] library integrated with it and allow you tu use their 60+ random generator as built-in Custom Types. It is also posible to create your own Custom Types by just passing a function or a RegularExpression statement as the Type on the Schema.
+DreamJS comes with the power of the [Chance][Chance] library integrated with it and allow you tu use their 60+ random generator as built-in Custom Types. It is also posible to create your own Custom Types by just passing a function or a RegularExpression statement as the Type on the Schema.
 
 A full list of all the posible Custom Types provided by chance can be found on their website: http://chancejs.com/
 ```js
@@ -155,5 +155,5 @@ result is:
 ```
 
 ### TODO
-The next step is to update Dream to allow the its use with promises and streams.
+The next step is to update DreamJS to allow the its use with promises and streams.
 [Chance]: http://chancejs.com/
