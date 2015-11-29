@@ -87,5 +87,9 @@ module.exports.generateRnd = {
 	
 	sentence: function(){
 		return chance.sentence();
+	},
+	
+	email: function(){
+		return chance.email();
 	}
 }
