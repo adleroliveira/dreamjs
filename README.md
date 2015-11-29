@@ -14,7 +14,7 @@ It can be used with multple Schemas that can be selected before usage and the it
 ### Hello World
 
 ```js
-var dream = require('dream');
+var dream = require('dreamjs');
 
 var helloworld = dream.output();
 ```

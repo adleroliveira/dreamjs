@@ -1,7 +1,7 @@
 {
   "name": "dreamjs",
-  "version": "0.0.1",
-  "description": "A lightweight json data generator, transformator and validator",
+  "version": "0.0.2",
+  "description": "A lightweight json data generator.",
   "main": "dream.js",
   "engine": "node >= 0.10.x",
   "scripts": {
@@ -13,9 +13,10 @@
   },
   "keywords": [
     "json",
-    "validator",
+    "schemas",
     "generator",
-    "transformator"
+    "data",
+    "random"
   ],
   "author": "Adler Oliveira",
   "license": "MIT",
