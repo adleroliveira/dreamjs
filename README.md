@@ -150,4 +150,7 @@ result is:
 	}
 ]
 ```
+
+### TODO
+The next step is to update Dream to allow the its use with promises and streams.
 [Chance]: http://chancejs.com/
