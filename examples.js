@@ -4,6 +4,8 @@ dream
     .schema({
         name: 'name',
         age: 'age',
+        country: 'country',
+        ipAddress: 'ip',
         address: 'address',
         contact: {
             phone: 'phone',
@@ -17,3 +19,4 @@ dream
     .output(function(err, result){      
         console.log(result);        
     });
+    

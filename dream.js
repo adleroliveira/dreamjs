@@ -3,7 +3,7 @@
 var
   _ = require('lodash'),
   RandExp = require('randexp'),
-  generateRnd = require('./generateRnd').generateRnd,
+  chance = require('chance').Chance(),
   djson = require('describe-json');
 
 var Dream = (function () {
@@ -178,34 +178,31 @@ var Dream = (function () {
       };
     };
 
-    if (typeof (propertyType) === 'string' && !_.has(generateRnd, propertyType)) {
-      propertyType = 'string';
-    };
-
     switch (typeof (propertyType)) {
       case 'string':
-
+      
+        temporaryValue = (typeof (chance[propertyType]) === 'function') ? chance[propertyType]() : '[Unknown Custom Type]';
         if (generateValues) {
-          value = generateRnd[propertyType]();
+          value = temporaryValue;
         } else {
-          value = types[typeof (generateRnd[propertyType]())]();
+          value = types[typeof (temporaryValue)]();
         }
 
         break;
       case 'function':
 
         temporaryValue = propertyType();
-        
-        if(isValueAdate(temporaryValue)){
+
+        if (isValueAdate(temporaryValue)) {
           value = new Date(temporaryValue);
-        }else{
-          
-          if(generateValues){
+        } else {
+
+          if (generateValues) {
             value = temporaryValue;
-          }else{
+          } else {
             value = types[typeof (temporaryValue)]();
           }
-          
+
         }
 
         break;
