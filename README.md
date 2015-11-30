@@ -9,10 +9,14 @@ The built-in Custom Types are mostly provided by the module [Chance][Chance] but
 
 It can be used with multple Schemas that can be selected before usage and the it is also chainable, meaning that you can chain several configurations before finaly output the processed json.
 
+## Instalation
+```js
+npm install --save dreamjs
+```
+
 ## Usage
 
 ### Hello World
-
 ```js
 var dream = require('dreamjs');
 
@@ -105,7 +109,7 @@ The variable data1 and data2 now contains:
 
 
 ### Custom Types
-DreamJS comes with the power of the [Chance][Chance] library integrated with it and allow you tu use their 60+ random generator as built-in Custom Types. It is also posible to create your own Custom Types by just passing a function or a RegularExpression statement as the Type on the Schema.
+DreamJS comes with the power of the [Chance][Chance] library integrated with it and allow you to use their 60+ random generator as built-in Custom Types. It is also posible to create your own Custom Types by just passing a function or a RegularExpression statement as the Type on the Schema.
 
 A full list of all the posible Custom Types provided by chance can be found on their website: http://chancejs.com/
 ```js
@@ -155,5 +159,5 @@ result is:
 ```
 
 ### TODO
-The next step is to update DreamJS to allow the its use with promises and streams.
+The next step is to update DreamJS to allow the use with promises and streams.
 [Chance]: http://chancejs.com/
