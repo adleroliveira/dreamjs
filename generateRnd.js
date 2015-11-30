@@ -91,5 +91,9 @@ module.exports.generateRnd = {
 	
 	email: function(){
 		return chance.email();
+	},
+	
+	last: function(){
+		return chance.last();
 	}
 }
