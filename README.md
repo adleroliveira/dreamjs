@@ -109,10 +109,17 @@ The variable data1 and data2 now contains:
 
 
 ### Custom Types
-DreamJS comes with the power of the [Chance][Chance] library integrated with it and allow you to use their 60+ random generator as built-in Custom Types. It is also posible to create your own Custom Types by just passing a function or a RegularExpression statement as the Type on the Schema.
+DreamJS comes with the power of the [Chance][Chance] library integrated with it and allow you to use their 60+ random generator as built-in Custom Types. It is also posible to create your own Custom Types or just just pass a function or a RegularExpression statement to use a generic Custom Type.
 
-A full list of all the posible Custom Types provided by chance can be found on their website: http://chancejs.com/
+A full list of all the posible built-in Custom Types provided by chance can be found on their website: http://chancejs.com/
 ```js
+
+dream.customType('pi', function(){
+    return Math.PI;
+});
+
+dream.customType('hello', /hello+ (world|to you)/);
+
 dream
 	.schema({
 		name: 'name',
@@ -124,7 +131,9 @@ dream
 		},
 		foo: function(){
 			return 'bar';
-		}
+		},
+		pi: 'pi',
+		hello: 'hello'
 	})
 	.generateRnd(2)
 	.output(function(err, result){		
@@ -134,27 +143,31 @@ dream
 
 result is:
 ```js
-[
+[ 
 	{ 
-		name: 'John',
-		age: 50,
-		address: '335 Ozda Highway',
-		contact: {
-			phone: '(823) 962-2040',
-			servicePhone: '800858523'
+		name: 'Dorothy Conner',
+		age: 32,
+		address: '702 Kimes Extension',
+		contact: { 
+			phone: '(985) 255-2142', 
+			servicePhone: '800493159' 
 		},
-		foo: 'bar'
+		foo: 'bar',
+		pi: 3.141592653589793,
+		hello: 'hellooooooooooo world' 
 	},
-	{ 
-		name: 'Mary',
-		age: 37,
-		address: '681 Vasfih Road',
-		contact: {
-			phone: '(339) 869-1952',
-			servicePhone: '800458292'
+  	{ 
+	  name: 'Nathaniel Payne',
+		age: 50,
+		address: '1811 Bani Manor',
+		contact: { 
+			phone: '(212) 389-6644', 
+			servicePhone: '800157977' 
 		},
-		foo: 'bar'
-	}
+		foo: 'bar',
+		pi: 3.141592653589793,
+		hello: 'hellooooooooooooooooooooooo to you' 
+	} 
 ]
 ```
 

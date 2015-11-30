@@ -6,39 +6,79 @@ var
   chance = require('chance').Chance(),
   djson = require('describe-json');
 
-var Dream = (function () {
+var _schemas = [];
+var _customTypes = [];
+
+var _defaultOutput = {
+  Dream: 'Hello World'
+};
+
+var _genericSchema = {
+  name: 'generic',
+  schema: {
+    default: String
+  }
+};
+
+function Dream() {
 
   this._selectedSchema;
-
   this._output;
 
-  this._schemas = [];
-
-  this._defaultOutput = {
-    Dream: 'Hello World'
-  };
-
-  this._genericSchema = {
-    name: 'generic',
-    schema: {
-      default: String
-    }
-  };
-
-  Dream.defaultSchema = function defaultSchema(schema) {
-    this._genericSchema = validateAndReturnSchema(schema);
-    return Dream;
+  this.defaultSchema = function defaultSchema(schema) {
+    _genericSchema = validateAndReturnSchema(schema);
+    return this;
   }.bind(this);
 
-  Dream.useSchema = function useSchema(schema) {
+  this.useSchema = function useSchema(schema) {
     var schemaToUse;
     schemaToUse = validateAndReturnSchema(schema);
-    Dream.schema(schemaToUse);
-    this._selectedSchema = schemaToUse;
-    return Dream;
+    var dreamInstance = new Dream();
+    dreamInstance.schema(schemaToUse)
+    dreamInstance._selectedSchema = schemaToUse;
+    return dreamInstance;
   }.bind(this);
 
-  Dream.output = function output(callback) {
+  this.customType = function customType(typeName, customType) {
+    var
+      newCustomType = {},
+      validTypeName,
+      customTypeIndex;
+
+    validTypeName = typeof (typeName) === 'string' ? typeName : 'generic';
+
+    if (customType.constructor == RegExp) {
+      newCustomType = {
+        name: validTypeName,
+        customType: function () {
+          return new RandExp(customType).gen();
+        }
+      };
+    } else if (typeof (customType) === 'function') {
+      newCustomType = {
+        name: validTypeName,
+        customType: customType
+      };
+    } else {
+      newCustomType = {
+        name: validTypeName,
+        customType: function () {
+          return '[Invalid Custom Type]';
+        }
+      };
+    };
+
+    customTypeIndex = _.indexOf(_customTypes, _.find(_customTypes, { name: validTypeName }));
+    if (customTypeIndex >= 0) {
+      _customTypes.splice(customTypeIndex, 1, newCustomType);
+    } else {
+      _customTypes.push(newCustomType);
+    };
+
+    return this;
+  }.bind(this);
+
+  this.output = function output(callback) {
     var output;
 
     output = this._output || generateOutput();
@@ -52,7 +92,7 @@ var Dream = (function () {
 
   }.bind(this);
 
-  Dream.schema = function schema(schema) {
+  this.schema = function schema(schema) {
     var
       validatedSchema,
       schemaIndex,
@@ -71,43 +111,43 @@ var Dream = (function () {
     }
 
     validatedSchema = validateAndReturnSchema(newSchema);
-    schemaIndex = _.indexOf(this._schemas, _.find(this._schemas, { name: validatedSchema.name }));
+    schemaIndex = _.indexOf(_schemas, _.find(_schemas, { name: validatedSchema.name }));
 
     if (schemaIndex >= 0) {
-      this._schemas.splice(schemaIndex, 1, validatedSchema);
+      _schemas.splice(schemaIndex, 1, validatedSchema);
     } else {
-      this._schemas.push(validatedSchema);
+      _schemas.push(validatedSchema);
     };
 
-    return Dream;
+    return this;
   }.bind(this);
 
-  Dream.generate = function generate(amount, generateRandomData) {
+  this.generate = function generate(amount, generateRandomData) {
     var
       outputItem,
-      itarations = amount || 1,
+      iterations = amount || 1,
       outputArray = [],
       i = 0;
 
-    for (; i < itarations; i++) {
+    for (; i < iterations; i++) {
       outputItem = generateOutputFromSchema(selectAvailableSchema(), generateRandomData)
       outputArray.push(outputItem);
     };
 
     this._output = outputArray;
-    return Dream;
+    return this;
   }.bind(this);
 
-  Dream.generateRnd = function generateRnd(amount) {
-    return Dream.generate(amount, true);
+  this.generateRnd = function generateRnd(amount) {
+    return this.generate(amount, true);
   };
 
   var validateAndReturnSchema = function validateAndReturnSchema(schema) {
     if (isValidSchema(schema)) return schema;
 
     if (typeof (schema) === 'string') {
-      var foundSchema = _.findWhere(this._schemas, { name: schema });
-      return isValidSchema(foundSchema) ? foundSchema : this._genericSchema;
+      var foundSchema = _.findWhere(_schemas, { name: schema });
+      return isValidSchema(foundSchema) ? foundSchema : _genericSchema;
     };
 
     if (typeof (schema) === 'object') {
@@ -117,7 +157,7 @@ var Dream = (function () {
       };
     };
 
-    return this._genericSchema;
+    return _genericSchema;
   }.bind(this);
 
   var selectAvailableSchema = function selectAvailableSchema() {
@@ -125,11 +165,11 @@ var Dream = (function () {
       return this._selectedSchema;
     };
 
-    if (thereIsSchema() && this._schemas.length === 1) {
-      return this._schemas[0];
+    if (thereIsSchema() && _schemas.length === 1) {
+      return _schemas[0];
     };
 
-    return this.defaultSchema;
+    return _genericSchema;
   }.bind(this);
 
   var generateOutput = function generateOutput() {
@@ -139,7 +179,7 @@ var Dream = (function () {
       schemaToUse = selectAvailableSchema();
       this._output = generateOutputFromSchema(schemaToUse);
     } else {
-      this._output = this._defaultOutput;
+      this._output = _defaultOutput;
     }
 
     return this._output;
@@ -160,6 +200,8 @@ var Dream = (function () {
       temporaryList = [],
       temporaryObject = {},
       temporaryValue,
+      customTypeIndex,
+      customTypeNeedle,
       types = {
         'number': Number,
         'string': String,
@@ -180,8 +222,15 @@ var Dream = (function () {
 
     switch (typeof (propertyType)) {
       case 'string':
-      
-        temporaryValue = (typeof (chance[propertyType]) === 'function') ? chance[propertyType]() : '[Unknown Custom Type]';
+        customTypeNeedle = _.find(_customTypes, { name: propertyType });
+        customTypeIndex = _.indexOf(_customTypes, customTypeNeedle);
+        
+        if (customTypeIndex >= 0) {
+          temporaryValue = customTypeNeedle.customType();
+        }else{
+          temporaryValue = (typeof (chance[propertyType]) === 'function') ? chance[propertyType]() : '[Unknown Custom Type]';
+        }
+        
         if (generateValues) {
           value = temporaryValue;
         } else {
@@ -241,15 +290,9 @@ var Dream = (function () {
   };
 
   var thereIsSchema = function thereIsSchema() {
-    return this._schemas.length > 0;
-  }.bind(this);
-
-  function Dream() {
-
+    return _schemas.length > 0;
   };
 
-  return Dream;
+};
 
-}.bind(this))();
-
-module.exports = Dream;
+module.exports = new Dream();
