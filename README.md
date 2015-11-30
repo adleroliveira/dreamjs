@@ -9,7 +9,7 @@ The built-in Custom Types are mostly provided by the module [Chance][Chance] but
 
 It can be used with multple Schemas that can be selected before usage and the it is also chainable, meaning that you can chain several configurations before finaly output the processed json.
 
-## Instalation
+## Installation
 ```js
 npm install --save dreamjs
 ```
