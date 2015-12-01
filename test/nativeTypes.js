@@ -12,7 +12,7 @@ dream.schema('Date', {result: Date});
 
 describe('Dream', function () {
 	describe('nativeTypes', function () {
-		it('should display a type corresponding with the Native Stipe Specified', function(){
+		it('should display a type corresponding with the Native Type Specified', function(){
 			expect(dream.useSchema('String').output().result).to.be.a('string');
 			expect(dream.useSchema('Boolean').output().result).to.be.a('boolean');
 			expect(dream.useSchema('Array').output().result).to.be.a('array');

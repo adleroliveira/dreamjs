@@ -92,13 +92,13 @@ function Dream() {
     }
 
   }.bind(this);
-  
-  this.cleanse = function cleanse(){
+
+  this.cleanse = function cleanse() {
     this._output = null;
     this._selectedSchema = null;
   }.bind(this);
-  
-  this.flushSchemas = function flushSchemas(){
+
+  this.flushSchemas = function flushSchemas() {
     _schemas = [];
     return this;
   }.bind(this);
@@ -132,12 +132,12 @@ function Dream() {
       } else {
         _schemas.push(validatedSchema);
       };
-      
-      if(_schemas.length === 1){
+
+      if (_schemas.length === 1) {
         this._selectedChema = validatedSchema;
       };
     }
-    
+
     return this;
   }.bind(this);
 
@@ -216,6 +216,7 @@ function Dream() {
       temporaryList = [],
       temporaryObject = {},
       temporaryValue,
+      isNativeFunction,
       customTypeIndex,
       customTypeNeedle,
       types = {
@@ -263,7 +264,7 @@ function Dream() {
         } else {
 
           if (generateValues) {
-            value = temporaryValue;
+            value = isNative(propertyType) ? chance[typeof (temporaryValue)]() : temporaryValue;
           } else {
             value = Array.isArray(temporaryValue) ? types['array']() : types[typeof (temporaryValue)]();
           }
@@ -301,6 +302,10 @@ function Dream() {
 
   var thereIsSchema = function thereIsSchema() {
     return _schemas.length > 0;
+  };
+
+  var isNative = function isNative(func) {
+    return !('prototype' in func);
   };
 
 };
