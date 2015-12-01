@@ -82,6 +82,7 @@ function Dream() {
     var output;
 
     output = this._output || generateOutput();
+    this.cleanse();
 
     if (typeof (callback) === 'function') {
       callback(null, output);
@@ -90,6 +91,16 @@ function Dream() {
       return output;
     }
 
+  }.bind(this);
+  
+  this.cleanse = function cleanse(){
+    this._output = null;
+    this._selectedSchema = null;
+  }.bind(this);
+  
+  this.flushSchemas = function flushSchemas(){
+    _schemas = [];
+    return this;
   }.bind(this);
 
   this.schema = function schema(schema) {
@@ -111,14 +122,22 @@ function Dream() {
     }
 
     validatedSchema = validateAndReturnSchema(newSchema);
-    schemaIndex = _.indexOf(_schemas, _.find(_schemas, { name: validatedSchema.name }));
 
-    if (schemaIndex >= 0) {
-      _schemas.splice(schemaIndex, 1, validatedSchema);
+    if (validatedSchema.name === 'generic') {
+      this._selectedSchema = validatedSchema;
     } else {
-      _schemas.push(validatedSchema);
-    };
-
+      schemaIndex = _.indexOf(_schemas, _.find(_schemas, { name: validatedSchema.name }));
+      if (schemaIndex >= 0) {
+        _schemas.splice(schemaIndex, 1, validatedSchema);
+      } else {
+        _schemas.push(validatedSchema);
+      };
+      
+      if(_schemas.length === 1){
+        this._selectedChema = validatedSchema;
+      };
+    }
+    
     return this;
   }.bind(this);
 
@@ -134,7 +153,7 @@ function Dream() {
       outputArray.push(outputItem);
     };
 
-    this._output = outputArray;
+    this._output = outputArray.length === 1 ? outputArray[0] : outputArray;
     return this;
   }.bind(this);
 
@@ -173,16 +192,13 @@ function Dream() {
   }.bind(this);
 
   var generateOutput = function generateOutput() {
-    var schemaToUse;
 
-    if (thereIsSchema()) {
-      schemaToUse = selectAvailableSchema();
-      this._output = generateOutputFromSchema(schemaToUse);
+    if (this._selectedSchema) {
+      return generateOutputFromSchema(this._selectedSchema);
     } else {
-      this._output = _defaultOutput;
-    }
+      return _defaultOutput;
+    };
 
-    return this._output;
   }.bind(this);
 
   var generateOutputFromSchema = function generateOutputFromSchema(schema, generateValues) {
@@ -205,7 +221,7 @@ function Dream() {
       types = {
         'number': Number,
         'string': String,
-        'bool': Boolean,
+        'boolean': Boolean,
         'array': Array,
         'object': Object,
         'function': Function,
@@ -216,7 +232,7 @@ function Dream() {
       if (generateValues) {
         return new RandExp(propertyType).gen();
       } else {
-        return types[typeof (RandExp(propertyType).gen())]();
+        return types[typeof (new RandExp(propertyType).gen())]();
       };
     };
 
@@ -224,13 +240,13 @@ function Dream() {
       case 'string':
         customTypeNeedle = _.find(_customTypes, { name: propertyType });
         customTypeIndex = _.indexOf(_customTypes, customTypeNeedle);
-        
+
         if (customTypeIndex >= 0) {
           temporaryValue = customTypeNeedle.customType();
-        }else{
+        } else {
           temporaryValue = (typeof (chance[propertyType]) === 'function') ? chance[propertyType]() : '[Unknown Custom Type]';
         }
-        
+
         if (generateValues) {
           value = temporaryValue;
         } else {
@@ -242,14 +258,14 @@ function Dream() {
 
         temporaryValue = propertyType();
 
-        if (isValueAdate(temporaryValue)) {
+        if (propertyType === Date) {
           value = new Date(temporaryValue);
         } else {
 
           if (generateValues) {
             value = temporaryValue;
           } else {
-            value = types[typeof (temporaryValue)]();
+            value = Array.isArray(temporaryValue) ? types['array']() : types[typeof (temporaryValue)]();
           }
 
         }
@@ -281,12 +297,6 @@ function Dream() {
 
   var isValidSchema = function isValidSchema(schema) {
     return _.has(schema, 'name') && _.has(schema, 'schema');
-  };
-
-  var isValueAdate = function (value) {
-    var temporaryDate;
-    temporaryDate = new Date(value);
-    return !isNaN(temporaryDate.valueOf());
   };
 
   var thereIsSchema = function thereIsSchema() {

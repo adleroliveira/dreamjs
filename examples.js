@@ -29,7 +29,8 @@ var locationSchema = {
     state: 'state',
     postal: 'postal',
     pi: 'pi',
-    hello: 'hello'
+    hello: 'hello',
+    num: Number
 }
 
 dream.schema('User', userSchema);

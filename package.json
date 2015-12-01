@@ -1,11 +1,11 @@
 {
   "name": "dreamjs",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A lightweight json data generator.",
   "main": "dream.js",
   "engine": "node >= 0.10.x",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -25,9 +25,11 @@
   },
   "homepage": "https://github.com/adleroliveira/dreamjs#readme",
   "dependencies": {
+    "chai": "^3.4.1",
     "chance": "^0.8.0",
     "describe-json": "0.0.6",
     "lodash": "^3.10.1",
+    "mocha": "^2.3.4",
     "randexp": "^0.4.1"
   }
 }
