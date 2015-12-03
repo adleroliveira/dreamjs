@@ -5,9 +5,35 @@ var
   RandExp = require('randexp'),
   chance = require('chance').Chance(),
   djson = require('describe-json');
-
+  
 var _schemas = [];
-var _customTypes = [];
+var _customTypes = [
+  {
+    name: 'number',
+    customType: function () {
+      return chance.natural();
+    }
+  },
+  {
+    name: 'boolean',
+    customType: function () {
+      return chance.bool();
+    }
+  },
+  {
+    name: 'null',
+    customType: function () {
+      return null;
+    }
+  }
+];
+
+var _dreamHelper = {
+  chance: chance,
+  oneOf: function(collection){
+    return _.sample(collection);
+  }
+};
 
 var _defaultOutput = {
   Dream: 'Hello World'
@@ -24,6 +50,8 @@ function Dream() {
 
   this._selectedSchema;
   this._output;
+  this._dreamHelper = _dreamHelper;
+  this._input;
 
   this.defaultSchema = function defaultSchema(schema) {
     _genericSchema = validateAndReturnSchema(schema);
@@ -39,15 +67,61 @@ function Dream() {
     return dreamInstance;
   }.bind(this);
 
+  this.input = function input(input) {
+    this._dreamHelper.input = this._input = input;
+    return (this);
+  }.bind(this);
+
+  this.generateSchema = function generateSchema() {
+    var
+      describedJson,
+      schemaName,
+      jsonInput,
+      validatedJsonInput,
+      guessProperties,
+      newSchema,
+      args = [];
+
+    Array.prototype.push.apply(args, arguments);
+
+    args.forEach(function (argument) {
+      switch (typeof (argument)) {
+        case 'string':
+          schemaName = argument;
+          break;
+        case 'object':
+          jsonInput = argument;
+          break;
+        case 'boolean':
+          guessProperties = argument;
+          break;
+      }
+    });
+
+    validatedJsonInput = Array.isArray(jsonInput) ? _.first(jsonInput) : jsonInput;
+
+    describedJson = djson.describe(validatedJsonInput || {});
+
+    newSchema = {
+      name: schemaName || 'generic',
+      schema: describedJson
+    };
+
+    if (guessProperties === true) {
+      newSchema.schema = guessCustomTypes(describedJson);
+    };
+    addOrReplace(_schemas, newSchema);
+    return this;
+  }.bind(this);
+
   this.customType = function customType(typeName, customType) {
     var
       newCustomType = {},
-      validTypeName,
-      customTypeIndex;
+      validTypeName;
 
     validTypeName = typeof (typeName) === 'string' ? typeName : 'generic';
 
-    if (customType.constructor == RegExp) {
+    if (customType.constructor === RegExp) {
       newCustomType = {
         name: validTypeName,
         customType: function () {
@@ -68,12 +142,7 @@ function Dream() {
       };
     };
 
-    customTypeIndex = _.indexOf(_customTypes, _.find(_customTypes, { name: validTypeName }));
-    if (customTypeIndex >= 0) {
-      _customTypes.splice(customTypeIndex, 1, newCustomType);
-    } else {
-      _customTypes.push(newCustomType);
-    };
+    addOrReplace(_customTypes, newCustomType);
 
     return this;
   }.bind(this);
@@ -86,7 +155,7 @@ function Dream() {
 
     if (typeof (callback) === 'function') {
       callback(null, output);
-      return Dream;
+      return this;
     } else {
       return output;
     }
@@ -106,7 +175,6 @@ function Dream() {
   this.schema = function schema(schema) {
     var
       validatedSchema,
-      schemaIndex,
       newSchema,
       args = [];
 
@@ -126,15 +194,11 @@ function Dream() {
     if (validatedSchema.name === 'generic') {
       this._selectedSchema = validatedSchema;
     } else {
-      schemaIndex = _.indexOf(_schemas, _.find(_schemas, { name: validatedSchema.name }));
-      if (schemaIndex >= 0) {
-        _schemas.splice(schemaIndex, 1, validatedSchema);
-      } else {
-        _schemas.push(validatedSchema);
-      };
+
+      addOrReplace(_schemas, validatedSchema);
 
       if (_schemas.length === 1) {
-        this._selectedChema = validatedSchema;
+        this._selectedSchema = validatedSchema;
       };
     }
 
@@ -159,6 +223,52 @@ function Dream() {
 
   this.generateRnd = function generateRnd(amount) {
     return this.generate(amount, true);
+  };
+
+  var addOrReplace = function addOrReplace(collection, item) {
+    var
+      index;
+
+    index = _.indexOf(collection, _.find(collection, { name: item.name }));
+    if (index >= 0) {
+      collection.splice(index, 1, item);
+    } else {
+      collection.push(item);
+    };
+
+    return collection;
+  };
+
+  var guessCustomTypes = function guessCustomTypes(schemaObject) {
+    var
+      customTypeExists,
+      temporaryList = [];
+
+    _.forIn(schemaObject, function (value, key) {
+      if (typeof (value) === 'object') {
+        if (Array.isArray(value)) {
+          value.forEach(function (item) {
+            if (typeof (item) === 'object') {
+              temporaryList.push(guessCustomTypes(item));
+            } else {
+              temporaryList.push(item.toString());
+            };
+          });
+          schemaObject[key] = temporaryList;
+        } else {
+          schemaObject[key] = guessCustomTypes(value);
+        };
+      } else {
+
+        customTypeExists = _.find(_customTypes, { name: key.toString() });
+
+        if (typeof (chance[key.toString()]) === 'function' || customTypeExists !== undefined) {
+          schemaObject[key] = key.toString();
+        };
+      };
+    });
+
+    return schemaObject;
   };
 
   var validateAndReturnSchema = function validateAndReturnSchema(schema) {
@@ -202,13 +312,14 @@ function Dream() {
   }.bind(this);
 
   var generateOutputFromSchema = function generateOutputFromSchema(schema, generateValues) {
-    var outputObject = {};
-    var schemaToUse = validateAndReturnSchema(schema);
+    var
+      outputObject = {},
+      schemaToUse = validateAndReturnSchema(schema);
     _.forIn(schemaToUse.schema, function (value, key) {
       outputObject[key] = getValueFromType(value, generateValues);
     });
     return outputObject;
-  };
+  }.bind(this);
 
   var getValueFromType = function getValueFromType(propertyType, generateValues) {
     var
@@ -216,9 +327,9 @@ function Dream() {
       temporaryList = [],
       temporaryObject = {},
       temporaryValue,
-      isNativeFunction,
       customTypeIndex,
       customTypeNeedle,
+      context = this,
       types = {
         'number': Number,
         'string': String,
@@ -229,7 +340,7 @@ function Dream() {
         'date': Date
       };
 
-    if (propertyType.constructor == RegExp) {
+    if (propertyType.constructor === RegExp) {
       if (generateValues) {
         return new RandExp(propertyType).gen();
       } else {
@@ -243,16 +354,20 @@ function Dream() {
         customTypeIndex = _.indexOf(_customTypes, customTypeNeedle);
 
         if (customTypeIndex >= 0) {
-          temporaryValue = customTypeNeedle.customType();
+          temporaryValue = customTypeNeedle.customType(this._dreamHelper);
         } else {
-          temporaryValue = (typeof (chance[propertyType]) === 'function') ? chance[propertyType]() : '[Unknown Custom Type]';
-        }
+          if (propertyType === 'array') {
+            temporaryValue = [];
+          } else {
+            temporaryValue = (typeof (chance[propertyType]) === 'function') ? chance[propertyType]() : '[Unknown Custom Type]';
+          };
+        };
 
         if (generateValues) {
           value = temporaryValue;
         } else {
           value = types[typeof (temporaryValue)]();
-        }
+        };
 
         break;
       case 'function':
@@ -276,13 +391,13 @@ function Dream() {
 
         if (Array.isArray(propertyType)) {
           propertyType.forEach(function (item) {
-            temporaryList.push(getValueFromType(item, generateValues));
+            temporaryList.push(getValueFromType.call(context, item, generateValues));
           });
 
           value = temporaryList;
         } else {
           _.forIn(propertyType, function (value, key) {
-            temporaryObject[key] = getValueFromType(value, generateValues);
+            temporaryObject[key] = getValueFromType.call(context, value, generateValues);
           });
 
           value = temporaryObject;
@@ -291,10 +406,10 @@ function Dream() {
         break;
       default:
         value = '[Invalid Property]';
-    }
+    };
 
     return value;
-  };
+  }.bind(this);
 
   var isValidSchema = function isValidSchema(schema) {
     return _.has(schema, 'name') && _.has(schema, 'schema');

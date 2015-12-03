@@ -173,6 +173,80 @@ result is:
 ]
 ```
 
+### Dream Helper
+Whenever you build your own Custom Type, DreamJS provides to your Custom Type callback a helper object that contains some useful tools like:
+
+##Chance Instance
+An instance of the library chance, that allows you to make full use of their methods with custom configuration
+```js
+dream.customType('FiveWordsSentence', function(helper){
+    return helper.chance.sentence({words:5});
+});
+
+dream
+	.schema({
+		frase: 'FiveWordsSentence',
+	})
+	.generateRnd(2)
+	.output(function(err, result){		
+		console.log(result);		
+	});
+```
+Result:
+```js
+[ 
+	{ frase: 'Laf woelimev vu vazpazap upecu.' },
+  	{ frase: 'Batunwa ziti laralsuc ve rudeoze.' } 
+]
+```
+
+##Input
+It is possible to define an input to the DreamJS data flow, that will be available through the helper so you can use this data to interact with your Custom Type.
+```js
+dream.customType('customTypeWithInput', function(helper){
+    return helper.input.value;
+});
+
+dream
+	.input({value: 'Provided by an input'})
+	.schema({
+		result: 'customTypeWithInput',
+	})
+	.generateRnd()
+	.output(function(err, result){		
+		console.log(result);		
+	});
+```
+Result:
+```js
+{ result: 'Provided by an input' }
+```
+
+##oneOf()
+A method that allow you to pick a single random value from a provided array. This way you can splicit specify the scope of what is being returned from your Custom Type.
+```js
+dream.customType('icecreamTruckDay', function (helper) {
+	var businessDays = ['Monday', 'Wednesday', 'Friday'];
+	return helper.oneOf(businessDays);
+});
+
+dream
+	.schema({
+		icecreamDay: 'icecreamTruckDay',
+	})
+	.generateRnd(2)
+	.output(function(err, result){		
+		console.log(result);		
+	});
+```
+Result:
+```js
+[ 
+	{ icecreamDay: 'Wednesday' }, 
+	{ icecreamDay: 'Monday' } 
+]
+```
+
 ### TODO
 The next step is to update DreamJS to allow the use with promises and streams.
 [Chance]: http://chancejs.com/

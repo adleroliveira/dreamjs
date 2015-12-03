@@ -75,3 +75,45 @@ dream
     .output(function(err, result){      
         console.log(result);        
     });
+    
+dream.customType('FiveWordsSentence', function(helper){
+    return helper.chance.sentence({words:5});
+});
+
+dream
+	.schema({
+		frase: 'FiveWordsSentence',
+	})
+	.generateRnd(2)
+	.output(function(err, result){		
+		console.log(result);		
+	});
+    
+    
+dream.customType('customTypeWithInput', function(helper){
+    return helper.input.value;
+});
+
+dream
+	.input({value: 'Provided by an input'})
+	.schema({
+		result: 'customTypeWithInput',
+	})
+	.generateRnd()
+	.output(function(err, result){		
+		console.log(result);		
+	});
+    
+dream.customType('icecreamTruckDay', function (helper) {
+	var businessDays = ['Monday', 'Wednesday', 'Friday'];
+	return helper.oneOf(businessDays);
+});
+
+dream
+	.schema({
+		icecreamDay: 'icecreamTruckDay',
+	})
+	.generateRnd(2)
+	.output(function(err, result){		
+		console.log(result);		
+	});
