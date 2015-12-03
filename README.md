@@ -223,7 +223,7 @@ Result:
 ```
 
 ###oneOf()
-A method that allows you to pick a single random value from a provided array. This way you can explicit specify the scope of what is being returned from your Custom Type.
+A method that allows you to pick a single random value from a provided array. This way you can explicitly specify the scope of what is being returned from your Custom Type.
 ```js
 dream.customType('icecreamTruckDay', function (helper) {
 	var businessDays = ['Monday', 'Wednesday', 'Friday'];
