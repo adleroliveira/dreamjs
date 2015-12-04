@@ -59,11 +59,15 @@ function Dream() {
   }.bind(this);
 
   this.useSchema = function useSchema(schema) {
-    var schemaToUse;
+    var 
+      schemaToUse,
+      dreamInstance;
+      
     schemaToUse = validateAndReturnSchema(schema);
-    var dreamInstance = new Dream();
+    dreamInstance = new Dream();
     dreamInstance.schema(schemaToUse)
     dreamInstance._selectedSchema = schemaToUse;
+    
     return dreamInstance;
   }.bind(this);
 
@@ -98,8 +102,7 @@ function Dream() {
       }
     });
 
-    validatedJsonInput = Array.isArray(jsonInput) ? _.first(jsonInput) : jsonInput;
-
+    validatedJsonInput = _.first(_.flatten([jsonInput]));
     describedJson = djson.describe(validatedJsonInput || {});
 
     newSchema = {

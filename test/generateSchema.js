@@ -2,11 +2,17 @@ var chai = require('chai');
 var expect = require('chai').expect;
 var dream = require('../dream.js');
 
-var objInfo = {
-	name: 'John Doe',
-	age: 58,
-	hobbies: ['swiming', 'hiking', 'gaming']
-};
+var objInfo = [
+	{
+		name: 'John Doe',
+		age: 58,
+		hobbies: ['swiming', 'hiking', 'gaming']
+	}, {
+		name: 'John Doe',
+		age: 58,
+		hobbies: ['swiming', 'hiking', 'gaming']
+	}
+];
 
 dream.generateSchema('Person', objInfo);
 
