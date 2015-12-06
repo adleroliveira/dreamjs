@@ -48,12 +48,12 @@ var _genericSchema = {
 
 function Dream() {
 
-  this._selectedSchema;
-  this._output;
+  //this._selectedSchema;
+  //this._output;
   this._dreamHelper = _dreamHelper;
-  this._input;
+  //this._input;
 
-  this.defaultSchema = function defaultSchema(schema) {
+  this.defaultSchema = function (schema) {
     _genericSchema = validateAndReturnSchema(schema);
     return this;
   }.bind(this);
@@ -72,17 +72,17 @@ function Dream() {
   }.bind(this);
 
   this.input = function input(input) {
-    this._dreamHelper.input = this._input = input;
+    this._dreamHelper.input = input;
     return (this);
   }.bind(this);
 
-  this.generateSchema = function generateSchema() {
+  this.generateSchema = function () {
     var
       describedJson,
-      schemaName,
-      jsonInput,
+      schemaName = '',
+      jsonInput = '',
       validatedJsonInput,
-      guessProperties,
+      guessProperties = false,
       newSchema,
       args = [];
 
@@ -117,7 +117,7 @@ function Dream() {
     return this;
   }.bind(this);
 
-  this.customType = function customType(typeName, customType) {
+  this.customType = function (typeName, customType) {
     var
       newCustomType = {},
       validTypeName;
@@ -150,6 +150,11 @@ function Dream() {
     return this;
   }.bind(this);
 
+  this.cleanse = function () {
+    this._output = null;
+    this._selectedSchema = null;
+  }.bind(this);
+
   this.output = function output(callback) {
     var output;
 
@@ -165,15 +170,10 @@ function Dream() {
 
   }.bind(this);
 
-  this.cleanse = function cleanse() {
-    this._output = null;
-    this._selectedSchema = null;
-  }.bind(this);
-
-  this.flushSchemas = function flushSchemas() {
-    _schemas = [];
-    return this;
-  }.bind(this);
+  //this.flushSchemas = function () {
+  //  _schemas = [];
+  //  return this;
+  //}.bind(this);
 
   this.schema = function schema(schema) {
     var
@@ -216,7 +216,7 @@ function Dream() {
       i = 0;
 
     for (; i < iterations; i++) {
-      outputItem = generateOutputFromSchema(selectAvailableSchema(), generateRandomData)
+      outputItem = generateOutputFromSchema(selectAvailableSchema(), generateRandomData);
       outputArray.push(outputItem);
     }
 
@@ -274,7 +274,7 @@ function Dream() {
     return schemaObject;
   };
 
-  var validateAndReturnSchema = function validateAndReturnSchema(schema) {
+  var validateAndReturnSchema = function (schema) {
     if (isValidSchema(schema)) return schema;
 
     if (typeof (schema) === 'string') {
@@ -292,7 +292,7 @@ function Dream() {
     return _genericSchema;
   }.bind(this);
 
-  var selectAvailableSchema = function selectAvailableSchema() {
+  var selectAvailableSchema = function () {
     if (this._selectedSchema) {
       return this._selectedSchema;
     }
@@ -304,7 +304,7 @@ function Dream() {
     return _genericSchema;
   }.bind(this);
 
-  var generateOutput = function generateOutput() {
+  var generateOutput = function () {
 
     if (this._selectedSchema) {
       return generateOutputFromSchema(this._selectedSchema);
@@ -314,7 +314,7 @@ function Dream() {
 
   }.bind(this);
 
-  var generateOutputFromSchema = function generateOutputFromSchema(schema, generateValues) {
+  var generateOutputFromSchema = function (schema, generateValues) {
     var
       outputObject = {},
       schemaToUse = validateAndReturnSchema(schema);
