@@ -34,7 +34,7 @@ dream
     });
 
 dream.schema('User',{
-    name: String,
+    name: String
 });
 
 var data1 = dream
@@ -63,7 +63,7 @@ dream
         address: 'address',
         contact: {
             phone: 'phone',
-            servicePhone: /^(800[1-9]{6})$/,
+            servicePhone: /^(800[1-9]{6})$/
         },
         foo: function(){
             return 'bar';
@@ -82,7 +82,7 @@ dream.customType('FiveWordsSentence', function(helper){
 
 dream
     .schema({
-        frase: 'FiveWordsSentence',
+        frase: 'FiveWordsSentence'
     })
     .generateRnd(2)
     .output(function(err, result){
@@ -97,7 +97,7 @@ dream.customType('customTypeWithInput', function(helper){
 dream
     .input({value: 'Provided by an input'})
     .schema({
-        result: 'customTypeWithInput',
+        result: 'customTypeWithInput'
     })
     .generateRnd()
     .output(function(err, result){
@@ -111,7 +111,7 @@ dream.customType('icecreamTruckDay', function (helper) {
 
 dream
     .schema({
-        icecreamDay: 'icecreamTruckDay',
+        icecreamDay: 'icecreamTruckDay'
     })
     .generateRnd(2)
     .output(function(err, result){
