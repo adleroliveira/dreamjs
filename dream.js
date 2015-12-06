@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var
   _ = require('lodash'),
@@ -65,7 +65,7 @@ function Dream() {
 
     schemaToUse = validateAndReturnSchema(schema);
     dreamInstance = new Dream();
-    dreamInstance.schema(schemaToUse)
+    dreamInstance.schema(schemaToUse);
     dreamInstance._selectedSchema = schemaToUse;
 
     return dreamInstance;
@@ -112,7 +112,7 @@ function Dream() {
 
     if (guessProperties === true) {
       newSchema.schema = guessCustomTypes(describedJson);
-    };
+    }
     addOrReplace(_schemas, newSchema);
     return this;
   }.bind(this);
@@ -143,7 +143,7 @@ function Dream() {
           return '[Invalid Custom Type]';
         }
       };
-    };
+    }
 
     addOrReplace(_customTypes, newCustomType);
 
@@ -202,7 +202,7 @@ function Dream() {
 
       if (_schemas.length === 1) {
         this._selectedSchema = validatedSchema;
-      };
+      }
     }
 
     return this;
@@ -218,7 +218,7 @@ function Dream() {
     for (; i < iterations; i++) {
       outputItem = generateOutputFromSchema(selectAvailableSchema(), generateRandomData)
       outputArray.push(outputItem);
-    };
+    }
 
     this._output = outputArray.length === 1 ? outputArray[0] : outputArray;
     return this;
@@ -237,7 +237,7 @@ function Dream() {
       collection.splice(index, 1, item);
     } else {
       collection.push(item);
-    };
+    }
 
     return collection;
   };
@@ -255,20 +255,20 @@ function Dream() {
               temporaryList.push(guessCustomTypes(item));
             } else {
               temporaryList.push(item.toString());
-            };
+            }
           });
           schemaObject[key] = temporaryList;
         } else {
           schemaObject[key] = guessCustomTypes(value);
-        };
+        }
       } else {
 
         customTypeExists = _.find(_customTypes, { name: key.toString() });
 
         if (typeof (chance[key.toString()]) === 'function' || customTypeExists !== undefined) {
           schemaObject[key] = key.toString();
-        };
-      };
+        }
+      }
     });
 
     return schemaObject;
@@ -280,14 +280,14 @@ function Dream() {
     if (typeof (schema) === 'string') {
       var foundSchema = _.findWhere(_schemas, { name: schema });
       return isValidSchema(foundSchema) ? foundSchema : _genericSchema;
-    };
+    }
 
     if (typeof (schema) === 'object') {
       return {
         name: 'generic',
         schema: schema
       };
-    };
+    }
 
     return _genericSchema;
   }.bind(this);
@@ -295,11 +295,11 @@ function Dream() {
   var selectAvailableSchema = function selectAvailableSchema() {
     if (this._selectedSchema) {
       return this._selectedSchema;
-    };
+    }
 
     if (thereIsSchema() && _schemas.length === 1) {
       return _schemas[0];
-    };
+    }
 
     return _genericSchema;
   }.bind(this);
@@ -310,7 +310,7 @@ function Dream() {
       return generateOutputFromSchema(this._selectedSchema);
     } else {
       return _defaultOutput;
-    };
+    }
 
   }.bind(this);
 
@@ -348,8 +348,8 @@ function Dream() {
         return new RandExp(propertyType).gen();
       } else {
         return types[typeof (new RandExp(propertyType).gen())]();
-      };
-    };
+      }
+    }
 
     switch (typeof (propertyType)) {
       case 'string':
@@ -363,14 +363,14 @@ function Dream() {
             temporaryValue = [];
           } else {
             temporaryValue = (typeof (chance[propertyType]) === 'function') ? chance[propertyType]() : '[Unknown Custom Type]';
-          };
-        };
+          }
+        }
 
         if (generateValues) {
           value = temporaryValue;
         } else {
           value = types[typeof (temporaryValue)]();
-        };
+        }
 
         break;
       case 'function':
@@ -404,12 +404,12 @@ function Dream() {
           });
 
           value = temporaryObject;
-        };
+        }
 
         break;
       default:
         value = '[Invalid Property]';
-    };
+    }
 
     return value;
   }.bind(this);
@@ -426,6 +426,6 @@ function Dream() {
     return !('prototype' in func);
   };
 
-};
+}
 
 module.exports = new Dream();
