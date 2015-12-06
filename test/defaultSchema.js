@@ -6,9 +6,9 @@ dream.schema('Schema1', {});
 dream.schema('Schema2', {});
 
 describe('Dream', function () {
-	describe('defaultSchema', function () {
-		it('should display the default schema', function(){
-			expect(dream.useSchema('UnknownSchema').output()).to.deep.equal({ default: '' });
-		});
-	});
+  describe('defaultSchema', function () {
+    it('should display the default schema', function () {
+      expect(dream.useSchema('UnknownSchema').output()).to.deep.equal({default: ''});
+    });
+  });
 });
