@@ -9,13 +9,13 @@ dream.customType('inputTest', function (helper) {
 dream.schema('SchemaUsingInput', {result: 'inputTest'});
 
 dream.input({
-	test: 'ok'
+  test: 'ok'
 });
 
 describe('Dream', function () {
-	describe('inputs', function () {
-		it('should use input data within a custom type', function(){
-			expect(dream.useSchema('SchemaUsingInput').generateRnd().output().result).to.equal('ok');
-		});
-	});
+  describe('inputs', function () {
+    it('should use input data within a custom type', function () {
+      expect(dream.useSchema('SchemaUsingInput').generateRnd().output().result).to.equal('ok');
+    });
+  });
 });

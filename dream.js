@@ -1,11 +1,11 @@
-'use strict'
+'use strict';
 
 var
   _ = require('lodash'),
   RandExp = require('randexp'),
   chance = require('chance').Chance(),
   djson = require('describe-json');
-  
+
 var _schemas = [];
 var _customTypes = [
   {
@@ -30,7 +30,7 @@ var _customTypes = [
 
 var _dreamHelper = {
   chance: chance,
-  oneOf: function(collection){
+  oneOf: function (collection) {
     return _.sample(collection);
   }
 };
@@ -48,41 +48,41 @@ var _genericSchema = {
 
 function Dream() {
 
-  this._selectedSchema;
-  this._output;
+  //this._selectedSchema;
+  //this._output;
   this._dreamHelper = _dreamHelper;
-  this._input;
+  //this._input;
 
-  this.defaultSchema = function defaultSchema(schema) {
+  this.defaultSchema = function (schema) {
     _genericSchema = validateAndReturnSchema(schema);
     return this;
   }.bind(this);
 
   this.useSchema = function useSchema(schema) {
-    var 
+    var
       schemaToUse,
       dreamInstance;
-      
+
     schemaToUse = validateAndReturnSchema(schema);
     dreamInstance = new Dream();
-    dreamInstance.schema(schemaToUse)
+    dreamInstance.schema(schemaToUse);
     dreamInstance._selectedSchema = schemaToUse;
-    
+
     return dreamInstance;
   }.bind(this);
 
   this.input = function input(input) {
-    this._dreamHelper.input = this._input = input;
+    this._dreamHelper.input = input;
     return (this);
   }.bind(this);
 
-  this.generateSchema = function generateSchema() {
+  this.generateSchema = function () {
     var
       describedJson,
-      schemaName,
-      jsonInput,
+      schemaName = '',
+      jsonInput = '',
       validatedJsonInput,
-      guessProperties,
+      guessProperties = false,
       newSchema,
       args = [];
 
@@ -112,12 +112,12 @@ function Dream() {
 
     if (guessProperties === true) {
       newSchema.schema = guessCustomTypes(describedJson);
-    };
+    }
     addOrReplace(_schemas, newSchema);
     return this;
   }.bind(this);
 
-  this.customType = function customType(typeName, customType) {
+  this.customType = function (typeName, customType) {
     var
       newCustomType = {},
       validTypeName;
@@ -143,11 +143,16 @@ function Dream() {
           return '[Invalid Custom Type]';
         }
       };
-    };
+    }
 
     addOrReplace(_customTypes, newCustomType);
 
     return this;
+  }.bind(this);
+
+  this.cleanse = function () {
+    this._output = null;
+    this._selectedSchema = null;
   }.bind(this);
 
   this.output = function output(callback) {
@@ -165,15 +170,10 @@ function Dream() {
 
   }.bind(this);
 
-  this.cleanse = function cleanse() {
-    this._output = null;
-    this._selectedSchema = null;
-  }.bind(this);
-
-  this.flushSchemas = function flushSchemas() {
-    _schemas = [];
-    return this;
-  }.bind(this);
+  //this.flushSchemas = function () {
+  //  _schemas = [];
+  //  return this;
+  //}.bind(this);
 
   this.schema = function schema(schema) {
     var
@@ -202,7 +202,7 @@ function Dream() {
 
       if (_schemas.length === 1) {
         this._selectedSchema = validatedSchema;
-      };
+      }
     }
 
     return this;
@@ -216,9 +216,9 @@ function Dream() {
       i = 0;
 
     for (; i < iterations; i++) {
-      outputItem = generateOutputFromSchema(selectAvailableSchema(), generateRandomData)
+      outputItem = generateOutputFromSchema(selectAvailableSchema(), generateRandomData);
       outputArray.push(outputItem);
-    };
+    }
 
     this._output = outputArray.length === 1 ? outputArray[0] : outputArray;
     return this;
@@ -232,12 +232,12 @@ function Dream() {
     var
       index;
 
-    index = _.indexOf(collection, _.find(collection, { name: item.name }));
+    index = _.indexOf(collection, _.find(collection, {name: item.name}));
     if (index >= 0) {
       collection.splice(index, 1, item);
     } else {
       collection.push(item);
-    };
+    }
 
     return collection;
   };
@@ -255,66 +255,66 @@ function Dream() {
               temporaryList.push(guessCustomTypes(item));
             } else {
               temporaryList.push(item.toString());
-            };
+            }
           });
           schemaObject[key] = temporaryList;
         } else {
           schemaObject[key] = guessCustomTypes(value);
-        };
+        }
       } else {
 
-        customTypeExists = _.find(_customTypes, { name: key.toString() });
+        customTypeExists = _.find(_customTypes, {name: key.toString()});
 
         if (typeof (chance[key.toString()]) === 'function' || customTypeExists !== undefined) {
           schemaObject[key] = key.toString();
-        };
-      };
+        }
+      }
     });
 
     return schemaObject;
   };
 
-  var validateAndReturnSchema = function validateAndReturnSchema(schema) {
+  var validateAndReturnSchema = function (schema) {
     if (isValidSchema(schema)) return schema;
 
     if (typeof (schema) === 'string') {
-      var foundSchema = _.findWhere(_schemas, { name: schema });
+      var foundSchema = _.findWhere(_schemas, {name: schema});
       return isValidSchema(foundSchema) ? foundSchema : _genericSchema;
-    };
+    }
 
     if (typeof (schema) === 'object') {
       return {
         name: 'generic',
         schema: schema
       };
-    };
+    }
 
     return _genericSchema;
   }.bind(this);
 
-  var selectAvailableSchema = function selectAvailableSchema() {
+  var selectAvailableSchema = function () {
     if (this._selectedSchema) {
       return this._selectedSchema;
-    };
+    }
 
     if (thereIsSchema() && _schemas.length === 1) {
       return _schemas[0];
-    };
+    }
 
     return _genericSchema;
   }.bind(this);
 
-  var generateOutput = function generateOutput() {
+  var generateOutput = function () {
 
     if (this._selectedSchema) {
       return generateOutputFromSchema(this._selectedSchema);
     } else {
       return _defaultOutput;
-    };
+    }
 
   }.bind(this);
 
-  var generateOutputFromSchema = function generateOutputFromSchema(schema, generateValues) {
+  var generateOutputFromSchema = function (schema, generateValues) {
     var
       outputObject = {},
       schemaToUse = validateAndReturnSchema(schema);
@@ -348,12 +348,12 @@ function Dream() {
         return new RandExp(propertyType).gen();
       } else {
         return types[typeof (new RandExp(propertyType).gen())]();
-      };
-    };
+      }
+    }
 
     switch (typeof (propertyType)) {
       case 'string':
-        customTypeNeedle = _.find(_customTypes, { name: propertyType });
+        customTypeNeedle = _.find(_customTypes, {name: propertyType});
         customTypeIndex = _.indexOf(_customTypes, customTypeNeedle);
 
         if (customTypeIndex >= 0) {
@@ -363,14 +363,14 @@ function Dream() {
             temporaryValue = [];
           } else {
             temporaryValue = (typeof (chance[propertyType]) === 'function') ? chance[propertyType]() : '[Unknown Custom Type]';
-          };
-        };
+          }
+        }
 
         if (generateValues) {
           value = temporaryValue;
         } else {
           value = types[typeof (temporaryValue)]();
-        };
+        }
 
         break;
       case 'function':
@@ -404,12 +404,12 @@ function Dream() {
           });
 
           value = temporaryObject;
-        };
+        }
 
         break;
       default:
         value = '[Invalid Property]';
-    };
+    }
 
     return value;
   }.bind(this);
@@ -426,6 +426,6 @@ function Dream() {
     return !('prototype' in func);
   };
 
-};
+}
 
 module.exports = new Dream();
