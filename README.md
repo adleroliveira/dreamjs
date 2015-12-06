@@ -4,11 +4,14 @@
 
 #### A lightweight json data generator.
 
-This library can output random data from a Json Schema using standard types like String, Number, Date, Boolean, Array, or with the 60+ built-in custom types like Name, Age, Address, Word, Sentence, paragraph, gender, (RGB) color etc.
+This library can output random data from a Json Schema using standard types like String, Number, Date, Boolean, Array,
+or with the 60+ built-in custom types like Name, Age, Address, Word, Sentence, paragraph, gender, (RGB) color etc.
 
-The built-in Custom Types are mostly provided by the module [Chance][Chance] but the library also allows you to create your own Custom Types.
+The built-in Custom Types are mostly provided by the module [Chance][Chance] but the library also allows you to create
+your own Custom Types.
 
-It can be used with multple Schemas that can be selected before usage and the it is also chainable, meaning that you can chain several configurations before finaly output the processed json.
+It can be used with multiple Schemas that can be selected before usage and the it is also chainable, meaning that you
+can chain several configurations before finally output the processed json.
 
 ## Installation
 
@@ -33,7 +36,8 @@ The variable helloworld now contains:
 
 ### Callbacks
 
-Currently there is two ways you can get the output from DreamJS. By storing it in a variable or by passing a callback to it to receive the result. In the future it will also be possible to use it with Promises and Streams.
+Currently there is two ways you can get the output from DreamJS. By storing it in a variable or by passing a callback
+to it to receive the result. In the future it will also be possible to use it with Promises and Streams.
 
 Storing in a variable:
 ```js
@@ -49,7 +53,8 @@ dream.output(function (err, result) {
 
 ### Generic Schema / Named Schema
 
-The simplest way to use DreamJS is by defining a generic schema. If any other generic Schema is created after that it will replace the previous one.
+The simplest way to use DreamJS is by defining a generic schema.
+If any other generic Schema is created after that it will replace the previous one.
 
 ```js
 var data = dream
@@ -64,7 +69,7 @@ The variable data now contains:
 { name: '' }
 ```
 
-It is also posible to create named Schemas and use them when necessary.
+It is also possible to create named Schemas and use them when necessary.
 
 ```js
 dream.schema('User', {
@@ -89,7 +94,9 @@ The variable data now contains:
 
 ### Generate() and GenerateRnd()
 
-The methods Generate() and GenerateRnd() will generate a given amount of instances of the selected Schema respecting the data types specified on the Schema. The method Generate() will bring empty values and the method GenerateRnd() will bring values with random data.
+The methods `Generate()` and `GenerateRnd()` will generate a given amount of instances of the selected Schema
+respecting the data types specified on the Schema.
+The method `Generate()` will bring empty values and the method `GenerateRnd()` will bring values with random data.
 
 ```js
 dream.schema('User', {
@@ -107,7 +114,7 @@ var data2 = dream
   .output();
 ```
 
-The variable data1 and data2 now contains:
+The variable **data1** and **data2** now contains:
 ```js
 // data1
 [ { name: '' }, { name: '' }, { name: '' } ]
@@ -118,9 +125,13 @@ The variable data1 and data2 now contains:
 
 ### Custom Types
 
-DreamJS comes with the power of the [Chance][Chance] library integrated with it and allow you to use their 60+ random generator as built-in Custom Types. It is also posible to create your own Custom Types or just just pass a function or a RegularExpression statement to use a generic Custom Type.
+DreamJS comes with the power of the [Chance][Chance] library integrated with it and allow you to use their 60+ random
+generator as built-in Custom Types.
+It is also possible to create your own Custom Types or just just pass a function or a RegularExpression statement to 
+use a generic Custom Type.
 
-A full list of all the posible built-in Custom Types provided by chance can be found on their website: http://chancejs.com/
+A full list of all the possible built-in Custom Types provided by chance can be found on their website: http://chancejs.com
+
 ```js
 
 dream.customType('pi', function () {
@@ -182,7 +193,8 @@ Result:
 
 ## Dream Helper
 
-Whenever you build your own Custom Type, DreamJS provides to your Custom Type callback a helper object that contains some useful tools like:
+Whenever you build your own Custom Type, DreamJS provides to your Custom Type callback a helper object that contains
+some useful tools like:
 
 ### Chance Instance
 
@@ -213,7 +225,8 @@ Result:
 
 ### Input
 
-It is possible to define an input to the DreamJS data flow, that will be available through the helper so you can use this data to interact with your Custom Type.
+It is possible to define an input to the DreamJS data flow, that will be available through the helper so you can use
+this data to interact with your Custom Type.
 
 ```js
 dream.customType('customTypeWithInput', function (helper) {
@@ -238,7 +251,8 @@ Result:
 
 ### oneOf()
 
-A method that allows you to pick a single random value from a provided array. This way you can explicitly specify the scope of what is being returned from your Custom Type.
+A method that allows you to pick a single random value from a provided array. This way you can explicitly specify the
+scope of what is being returned from your Custom Type.
 
 ```js
 dream.customType('iceCreamTruckDay', function (helper) {
