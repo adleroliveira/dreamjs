@@ -30,7 +30,7 @@ var _customTypes = [
 
 var _dreamHelper = {
   chance: chance,
-  oneOf: function(collection){
+  oneOf: function (collection) {
     return _.sample(collection);
   }
 };
@@ -232,7 +232,7 @@ function Dream() {
     var
       index;
 
-    index = _.indexOf(collection, _.find(collection, { name: item.name }));
+    index = _.indexOf(collection, _.find(collection, {name: item.name}));
     if (index >= 0) {
       collection.splice(index, 1, item);
     } else {
@@ -263,7 +263,7 @@ function Dream() {
         }
       } else {
 
-        customTypeExists = _.find(_customTypes, { name: key.toString() });
+        customTypeExists = _.find(_customTypes, {name: key.toString()});
 
         if (typeof (chance[key.toString()]) === 'function' || customTypeExists !== undefined) {
           schemaObject[key] = key.toString();
@@ -278,7 +278,7 @@ function Dream() {
     if (isValidSchema(schema)) return schema;
 
     if (typeof (schema) === 'string') {
-      var foundSchema = _.findWhere(_schemas, { name: schema });
+      var foundSchema = _.findWhere(_schemas, {name: schema});
       return isValidSchema(foundSchema) ? foundSchema : _genericSchema;
     }
 
@@ -353,7 +353,7 @@ function Dream() {
 
     switch (typeof (propertyType)) {
       case 'string':
-        customTypeNeedle = _.find(_customTypes, { name: propertyType });
+        customTypeNeedle = _.find(_customTypes, {name: propertyType});
         customTypeIndex = _.indexOf(_customTypes, customTypeNeedle);
 
         if (customTypeIndex >= 0) {
