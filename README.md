@@ -127,7 +127,7 @@ The variable **data1** and **data2** now contains:
 
 DreamJS comes with the power of the [Chance][Chance] library integrated with it and allow you to use their 60+ random
 generator as built-in Custom Types.
-It is also possible to create your own Custom Types or just just pass a function or a RegularExpression statement to 
+It is also possible to create your own Custom Types or just just pass a function or a RegularExpression statement to
 use a generic Custom Type.
 
 A full list of all the possible built-in Custom Types provided by chance can be found on their website: http://chancejs.com
@@ -273,8 +273,8 @@ dream
 Result:
 ```js
 [
-  { iceCreamDay: 'Wednesday' }, 
-  { iceCreamDay: 'Wednesday' } 
+  { iceCreamDay: 'Wednesday' },
+  { iceCreamDay: 'Wednesday' }
 ]
 ```
 
