@@ -1,4 +1,4 @@
-//Examples used in the Readme.md
+// Examples used in the Readme.md
 
 var dream = require('./dream');
 
@@ -82,13 +82,12 @@ dream.customType('FiveWordsSentence', function (helper) {
 
 dream
   .schema({
-    frase: 'FiveWordsSentence'
+    phrase: 'FiveWordsSentence'
   })
   .generateRnd(2)
   .output(function (err, result) {
     console.log(result);
   });
-
 
 dream.customType('customTypeWithInput', function (helper) {
   return helper.input.value;
@@ -104,14 +103,14 @@ dream
     console.log(result);
   });
 
-dream.customType('icecreamTruckDay', function (helper) {
+dream.customType('iceCreamTruckDay', function (helper) {
   var businessDays = ['Monday', 'Wednesday', 'Friday'];
   return helper.oneOf(businessDays);
 });
 
 dream
   .schema({
-    icecreamDay: 'icecreamTruckDay'
+    iceCreamDay: 'iceCreamTruckDay'
   })
   .generateRnd(2)
   .output(function (err, result) {
