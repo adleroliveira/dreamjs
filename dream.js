@@ -5,7 +5,7 @@ var
   RandExp = require('randexp'),
   chance = require('chance').Chance(),
   djson = require('describe-json');
-  
+
 var _schemas = [];
 var _customTypes = [
   {
@@ -59,15 +59,15 @@ function Dream() {
   }.bind(this);
 
   this.useSchema = function useSchema(schema) {
-    var 
+    var
       schemaToUse,
       dreamInstance;
-      
+
     schemaToUse = validateAndReturnSchema(schema);
     dreamInstance = new Dream();
     dreamInstance.schema(schemaToUse)
     dreamInstance._selectedSchema = schemaToUse;
-    
+
     return dreamInstance;
   }.bind(this);
 
