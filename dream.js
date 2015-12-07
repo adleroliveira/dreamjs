@@ -25,6 +25,30 @@ var _customTypes = [
     customType: function () {
       return null;
     }
+  },
+  {
+    name: 'string',
+    customType: function () {
+      return chance.string();
+    }
+  },
+  {
+    name: 'array',
+    customType: function () {
+      return [];
+    }
+  },
+  {
+    name: 'object',
+    customType: function () {
+      return {};
+    }
+  },
+  {
+    name: 'function',
+    customType: function () {
+      return function(){};
+    }
   }
 ];
 
@@ -382,7 +406,8 @@ function Dream() {
         } else {
 
           if (generateValues) {
-            value = isNative(propertyType) ? chance[typeof (temporaryValue)]() : temporaryValue;
+            customTypeNeedle = _.find(_customTypes, { name: typeof (temporaryValue) });
+            value = isNative(propertyType) ? customTypeNeedle() : temporaryValue;
           } else {
             value = Array.isArray(temporaryValue) ? types['array']() : types[typeof (temporaryValue)]();
           }
