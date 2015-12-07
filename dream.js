@@ -407,7 +407,7 @@ function Dream() {
 
           if (generateValues) {
             customTypeNeedle = _.find(_customTypes, { name: typeof (temporaryValue) });
-            value = isNative(propertyType) ? customTypeNeedle() : temporaryValue;
+            value = isNative(propertyType) ? customTypeNeedle.customType() : temporaryValue;
           } else {
             value = Array.isArray(temporaryValue) ? types['array']() : types[typeof (temporaryValue)]();
           }
