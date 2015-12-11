@@ -116,3 +116,21 @@ dream
   .output(function (err, result) {
     console.log(result);
   });
+
+
+dream.schema('UserWithId', {
+	id: 'incrementalId',
+	name: 'name',
+	age: 'age'
+});
+
+dream.customType('incrementalId', function(helper){
+	return helper.previousItem ? helper.previousItem.id+1 : 1;
+});
+
+dream
+	.useSchema('UserWithId')
+	.generateRnd(5)
+	.output(function(err, result){
+		console.log(result);
+	});

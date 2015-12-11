@@ -194,10 +194,6 @@ function Dream() {
 
   }.bind(this);
 
-  //this.flushSchemas = function () {
-  //  _schemas = [];
-  //  return this;
-  //}.bind(this);
 
   this.schema = function schema(schema) {
     var
@@ -238,10 +234,13 @@ function Dream() {
       iterations = amount || 1,
       outputArray = [],
       i = 0;
+      
+    this._currentRecord = null;
 
     for (; i < iterations; i++) {
       outputItem = generateOutputFromSchema(selectAvailableSchema(), generateRandomData);
       outputArray.push(outputItem);
+      this._currentRecord = outputItem;
     }
 
     this._output = outputArray.length === 1 ? outputArray[0] : outputArray;
@@ -381,6 +380,7 @@ function Dream() {
         customTypeIndex = _.indexOf(_customTypes, customTypeNeedle);
 
         if (customTypeIndex >= 0) {
+          this._dreamHelper.previousItem = this._currentRecord;
           temporaryValue = customTypeNeedle.customType(this._dreamHelper);
         } else {
           if (propertyType === 'array') {

@@ -278,6 +278,40 @@ Result:
 ]
 ```
 
+### Previous Item
+
+The helper also exposes the previous generated item to the current one. This way, you will always have access to previous generated values if you need them to generate the next ones, like for example an incremental id.
+
+```js
+dream.schema('User', {
+	id: 'incrementalId',
+	name: 'name',
+	age: 'age'
+});
+
+dream.customType('incrementalId', function(helper){
+	return helper.previousItem ? helper.previousItem.id+1 : 1;
+});
+
+dream
+	.useSchema('User')
+	.generateRnd(5)
+	.output(function(err, result){
+		console.log(result);
+	});
+```
+
+Result:
+```js
+[ 
+  { id: 1, name: 'Bess Franklin', age: 60 },
+  { id: 2, name: 'Verna Brown', age: 45 },
+  { id: 3, name: 'Travis Poole', age: 42 },
+  { id: 4, name: 'Theresa Sanchez', age: 29 },
+  { id: 5, name: 'Ruth Lane', age: 33 } 
+]
+```
+
 ## TODO
 
 The next step is to update DreamJS to allow the use with promises and streams.
