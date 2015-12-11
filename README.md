@@ -274,7 +274,7 @@ Result:
 ```js
 [
   { iceCreamDay: 'Wednesday' },
-  { iceCreamDay: 'Wednesday' }
+  { iceCreamDay: 'Friday' }
 ]
 ```
 
