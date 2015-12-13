@@ -456,7 +456,7 @@ function Dream() {
 
   function isNative(fn) {
     return (/^function\s*[a-z0-9_\$]*\s*\([^)]*\)\s*\{\s*\[native code\]\s*\}/i).test('' + fn);
-  };
+  }
 
 }
 

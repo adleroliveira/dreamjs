@@ -121,7 +121,7 @@ dream
   .output();
 console.log(result9);
 
-// Previous Items
+// Previous Item
 dream.schema('UserWithId', {
 	id: 'incrementalId',
 	name: 'name',
