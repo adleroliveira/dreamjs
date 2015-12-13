@@ -1,6 +1,6 @@
 {
   "name": "dreamjs",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A lightweight json data generator.",
   "main": "dream.js",
   "engine": "node >= 0.10.x",

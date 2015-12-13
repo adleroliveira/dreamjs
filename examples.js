@@ -1,123 +1,127 @@
-// Examples used in the Readme.md
+// example in dream.js
+
+'use strict';
 
 var dream = require('./dream');
 
-var helloworld = dream.output();
-console.log(helloworld);
+// default Hello World
+console.log("*** default Hello World");
+var result1 = dream.output();
+console.log(result1);
 
-dream.output(function (err, result) {
-  console.log(result);
+// default callback Hello World
+console.log("\n*** default callback Hello World");
+dream.output(function(err, data){
+  console.log(data);
 });
 
-var data = dream
-  .schema({
-    name: String
-  })
-  .output();
+// Generic Schema
+console.log("\n*** Generic Schema");
+var result2 = dream.schema({
+  str: String,
+  number: Number
+}).output();
+console.log(result2);
 
-console.log(data);
-
-dream.schema('User', {
-  name: String,
-  age: Number
+// Named Schema
+console.log("\n*** Named Schema");
+dream.schema('UserSchema', {
+  name: 'name',
+  age: 'age'
 });
+var result3 = dream.useSchema('UserSchema').output();
+console.log(result3);
 
-dream.schema('Location', {
-  address: String,
-  postcode: Number
-});
+// Generate
+console.log("\n*** Generate");
+var result4 = dream.useSchema('UserSchema').generate(2).output();
+console.log(result4);
 
-dream
-  .useSchema('Location')
-  .output(function (err, result) {
-    console.log(result);
-  });
+// GenerateRnd
+console.log("\n*** GenerateRnd");
+var result5 = dream.useSchema('UserSchema').generateRnd(2).output();
+console.log(result5);
 
-dream.schema('User', {
-  name: String
-});
-
-var data1 = dream
-  .useSchema('User')
-  .generate(3)
-  .output();
-
-var data2 = dream
-  .useSchema('User')
-  .generateRnd(3)
-  .output();
-
-console.log(data1);
-console.log(data2);
-
-dream.customType('pi', function () {
+/**
+ * Custom Types
+ */
+ console.log("\n*** Custom Types");
+// create custom type by function
+dream.customType('pi', function(){
   return Math.PI;
 });
 
-dream.customType('hello', /hello+ (world|to you)/);
+// create custom type by Rexp statement
+dream.customType('hello', /hello{1,3} (world|to you)/);
 
-dream
-  .schema({
-    name: 'name',
-    age: 'age',
-    address: 'address',
-    contact: {
-      phone: 'phone',
-      servicePhone: /^(800[1-9]{6})$/
-    },
-    foo: function () {
-      return 'bar';
-    },
-    pi: 'pi',
-    hello: 'hello'
-  })
-  .generateRnd(2)
-  .output(function (err, result) {
-    console.log(result);
-  });
+var result6 = dream.schema({
+  // chance lib build-in custom type
+  name: 'name',
+  age: 'age',
 
-dream.customType('FiveWordsSentence', function (helper) {
+  // Rexp statement
+  phone: /^(800[1-9]{6})$/,
+
+  // function
+  foo: function(){
+    return 'bar';
+  },
+
+  // already defined custom type
+  pi: 'pi',
+  hello: 'hello'
+}).generateRnd(2).output();
+console.log(result6);
+
+/**
+ * Dream Helper
+ */
+
+// Chance Instance
+console.log("\n*** Chance Instance");
+dream.customType('5wordsSentence', function(helper){
   return helper.chance.sentence({words: 5});
 });
 
-dream
-  .schema({
-    phrase: 'FiveWordsSentence'
-  })
-  .generateRnd(2)
-  .output(function (err, result) {
-    console.log(result);
-  });
+var result7 = dream.schema({
+  sentence: '5wordsSentence'
+}).generateRnd(2).output();
+console.log(result7);
 
-dream.customType('customTypeWithInput', function (helper) {
+// input
+console.log("\n*** Input Helper");
+dream.customType('customTypeWithInput', function(helper){
   return helper.input.value;
 });
 
-dream
-  .input({value: 'Provided by an input'})
+var result8 = dream
+  .input({
+    value: 'I am the input value'
+  })
   .schema({
     result: 'customTypeWithInput'
   })
   .generateRnd()
-  .output(function (err, result) {
-    console.log(result);
-  });
+  .output();
+console.log(result8);
 
-dream.customType('iceCreamTruckDay', function (helper) {
+// oneOf()
+console.log("\n*** oneOf helper");
+dream.customType('iceCreamTruckDay', function(helper){
   var businessDays = ['Monday', 'Wednesday', 'Friday'];
   return helper.oneOf(businessDays);
 });
 
+var result9 =
 dream
   .schema({
     iceCreamDay: 'iceCreamTruckDay'
   })
   .generateRnd(2)
-  .output(function (err, result) {
-    console.log(result);
-  });
+  .output();
+console.log(result9);
 
-
+// Previous Items
 dream.schema('UserWithId', {
 	id: 'incrementalId',
 	name: 'name',
