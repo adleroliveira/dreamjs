@@ -240,7 +240,7 @@ function Dream() {
     return self.generate(amount, true);
   };
 
-  var addOrReplace = function addOrReplace(collection, item) {
+  function addOrReplace(collection, item) {
     var index;
 
     index = _.indexOf(collection, _.find(collection, { name: item.name }));
@@ -253,7 +253,7 @@ function Dream() {
     return collection;
   };
 
-  var guessCustomTypes = function guessCustomTypes(schemaObject) {
+  function guessCustomTypes(schemaObject) {
     var customTypeExists;
     var temporaryList = [];
 
@@ -283,7 +283,7 @@ function Dream() {
     return schemaObject;
   };
 
-  var validateAndReturnSchema = function(schema) {
+  function validateAndReturnSchema(schema) {
     if (isValidSchema(schema)) return schema;
 
     if (typeof (schema) === 'string') {
@@ -301,7 +301,7 @@ function Dream() {
     return _genericSchema;
   };
 
-  var selectAvailableSchema = function() {
+  function selectAvailableSchema() {
     if (self._selectedSchema) {
       return self._selectedSchema;
     }
@@ -313,7 +313,7 @@ function Dream() {
     return _genericSchema;
   };
 
-  var generateOutput = function() {
+  function generateOutput() {
     if (self._selectedSchema) {
       return generateOutputFromSchema(self._selectedSchema);
     } else {
@@ -322,7 +322,7 @@ function Dream() {
 
   };
 
-  var generateOutputFromSchema = function(schema, generateValues) {
+  function generateOutputFromSchema(schema, generateValues) {
     var outputObject = {};
     var schemaToUse = validateAndReturnSchema(schema);
 
@@ -333,7 +333,7 @@ function Dream() {
     return outputObject;
   };
 
-  var getValueFromType = function getValueFromType(propertyType, generateValues) {
+  function getValueFromType(propertyType, generateValues) {
     var temporaryList = [];
     var temporaryObject = {};
     var temporaryValue;
@@ -435,11 +435,11 @@ function Dream() {
 
   };
 
-  var isValidSchema = function isValidSchema(schema) {
+  function isValidSchema(schema) {
     return _.has(schema, 'name') && _.has(schema, 'schema');
   };
 
-  var thereIsSchema = function thereIsSchema() {
+  function thereIsSchema() {
     return _schemas.length > 0;
   };
 
