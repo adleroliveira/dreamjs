@@ -223,11 +223,10 @@ function Dream() {
     var outputItem;
     var iterations = amount || 1;
     var outputArray = [];
-    var i = 0;
-    
+
     self._currentRecord = null;
 
-    for (; i < iterations; i++) {
+    for (var i = 0; i < iterations; i++) {
       outputItem = generateOutputFromSchema(selectAvailableSchema(), generateRandomData);
       outputArray.push(outputItem);
       self._currentRecord = outputItem;
