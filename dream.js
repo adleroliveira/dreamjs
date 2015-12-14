@@ -1,10 +1,9 @@
 'use strict';
 
-var
-  _ = require('lodash'),
-  RandExp = require('randexp'),
-  chance = require('chance').Chance(),
-  djson = require('describe-json');
+var _ = require('lodash');
+var RandExp = require('randexp');
+var chance = require('chance').Chance();
+var djson = require('describe-json');
 
 var _schemas = [];
 var _customTypes = [
@@ -80,9 +79,8 @@ function Dream() {
   };
 
   this.useSchema = function useSchema(schema) {
-    var
-      schemaToUse,
-      dreamInstance;
+    var schemaToUse;
+    var dreamInstance;
 
     schemaToUse = validateAndReturnSchema(schema);
     dreamInstance = new Dream();
@@ -98,14 +96,13 @@ function Dream() {
   };
 
   this.generateSchema = function () {
-    var
-      describedJson,
-      schemaName = '',
-      jsonInput = '',
-      validatedJsonInput,
-      guessProperties = false,
-      newSchema,
-      args = [];
+    var describedJson;
+    var schemaName = '';
+    var jsonInput = '';
+    var validatedJsonInput;
+    var guessProperties = false;
+    var newSchema;
+    var args = [];
 
     Array.prototype.push.apply(args, arguments);
 
@@ -139,9 +136,8 @@ function Dream() {
   };
 
   this.customType = function (typeName, customType) {
-    var
-      newCustomType = {},
-      validTypeName;
+    var newCustomType = {};
+    var validTypeName;
 
     validTypeName = typeof (typeName) === 'string' ? typeName : 'generic';
 
@@ -192,10 +188,9 @@ function Dream() {
   };
 
   this.schema = function schema(schema) {
-    var
-      validatedSchema,
-      newSchema,
-      args = [];
+    var validatedSchema;
+    var newSchema;
+    var args = [];
 
     Array.prototype.push.apply(args, arguments);
 
@@ -225,12 +220,11 @@ function Dream() {
   };
 
   this.generate = function generate(amount, generateRandomData) {
-    var
-      outputItem,
-      iterations = amount || 1,
-      outputArray = [],
-      i = 0;
-
+    var outputItem;
+    var iterations = amount || 1;
+    var outputArray = [];
+    var i = 0;
+    
     self._currentRecord = null;
 
     for (; i < iterations; i++) {
@@ -248,8 +242,7 @@ function Dream() {
   };
 
   var addOrReplace = function addOrReplace(collection, item) {
-    var
-      index;
+    var index;
 
     index = _.indexOf(collection, _.find(collection, { name: item.name }));
     if (index >= 0) {
@@ -262,9 +255,8 @@ function Dream() {
   };
 
   var guessCustomTypes = function guessCustomTypes(schemaObject) {
-    var
-      customTypeExists,
-      temporaryList = [];
+    var customTypeExists;
+    var temporaryList = [];
 
     _.forIn(schemaObject, function (value, key) {
       if (typeof (value) === 'object') {
@@ -281,7 +273,6 @@ function Dream() {
           schemaObject[key] = guessCustomTypes(value);
         }
       } else {
-
         customTypeExists = _.find(_customTypes, { name: key.toString() });
 
         if (typeof (chance[key.toString()]) === 'function' || customTypeExists !== undefined) {
@@ -324,7 +315,6 @@ function Dream() {
   };
 
   var generateOutput = function () {
-
     if (self._selectedSchema) {
       return generateOutputFromSchema(self._selectedSchema);
     } else {
@@ -334,24 +324,24 @@ function Dream() {
   };
 
   var generateOutputFromSchema = function (schema, generateValues) {
-    var
-      outputObject = {},
-      schemaToUse = validateAndReturnSchema(schema);
+    var outputObject = {};
+    var schemaToUse = validateAndReturnSchema(schema);
+
     _.forIn(schemaToUse.schema, function (value, key) {
       outputObject[key] = getValueFromType(value, generateValues);
     });
+
     return outputObject;
   };
 
   var getValueFromType = function getValueFromType(propertyType, generateValues) {
-    var
-      temporaryList = [],
-      temporaryObject = {},
-      temporaryValue,
-      customTypeIndex,
-      customTypeNeedle,
-      context = self,
-      types = {
+    var temporaryList = [];
+    var temporaryObject = {};
+    var temporaryValue;
+    var customTypeIndex;
+    var customTypeNeedle;
+    var context = self;
+    var types = {
         'number': Number,
         'string': String,
         'boolean': Boolean,
