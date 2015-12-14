@@ -72,14 +72,14 @@ var _genericSchema = {
 
 function Dream() {
   var self = this;
-  this._dreamHelper = _dreamHelper;
+  self._dreamHelper = _dreamHelper;
 
-  this.defaultSchema = function (schema) {
+  self.defaultSchema = function (schema) {
     _genericSchema = validateAndReturnSchema(schema);
     return self;
   };
 
-  this.useSchema = function useSchema(schema) {
+  self.useSchema = function useSchema(schema) {
     var
       schemaToUse,
       dreamInstance;
@@ -92,12 +92,12 @@ function Dream() {
     return dreamInstance;
   };
 
-  this.input = function input(input) {
+  self.input = function input(input) {
     self._dreamHelper.input = input;
     return (self);
   };
 
-  this.generateSchema = function () {
+  self.generateSchema = function () {
     var
       describedJson,
       schemaName = '',
@@ -138,7 +138,7 @@ function Dream() {
     return self;
   };
 
-  this.customType = function (typeName, customType) {
+  self.customType = function (typeName, customType) {
     var
       newCustomType = {},
       validTypeName;
@@ -171,12 +171,12 @@ function Dream() {
     return self;
   };
 
-  this.cleanse = function () {
+  self.cleanse = function () {
     self._output = null;
     self._selectedSchema = null;
   };
 
-  this.output = function output(callback) {
+  self.output = function output(callback) {
     var output;
 
     output = self._output || generateOutput();
@@ -191,7 +191,7 @@ function Dream() {
 
   };
 
-  this.schema = function schema(schema) {
+  self.schema = function schema(schema) {
     var
       validatedSchema,
       newSchema,
@@ -224,7 +224,7 @@ function Dream() {
     return self;
   };
 
-  this.generate = function generate(amount, generateRandomData) {
+  self.generate = function generate(amount, generateRandomData) {
     var
       outputItem,
       iterations = amount || 1,
@@ -243,7 +243,7 @@ function Dream() {
     return self;
   };
 
-  this.generateRnd = function generateRnd(amount) {
+  self.generateRnd = function generateRnd(amount) {
     return self.generate(amount, true);
   };
 
