@@ -71,14 +71,14 @@ var _genericSchema = {
 
 function Dream() {
   var self = this;
-  this._dreamHelper = _dreamHelper;
+  self._dreamHelper = _dreamHelper;
 
-  this.defaultSchema = function(schema) {
+  self.defaultSchema = function(schema) {
     _genericSchema = validateAndReturnSchema(schema);
     return self;
   };
 
-  this.useSchema = function useSchema(schema) {
+  self.useSchema = function useSchema(schema) {
     var schemaToUse;
     var dreamInstance;
 
@@ -90,12 +90,12 @@ function Dream() {
     return dreamInstance;
   };
 
-  this.input = function input(input) {
+  self.input = function input(input) {
     self._dreamHelper.input = input;
     return (self);
   };
 
-  this.generateSchema = function() {
+  self.generateSchema = function() {
     var describedJson;
     var schemaName = '';
     var jsonInput = '';
@@ -135,7 +135,7 @@ function Dream() {
     return self;
   };
 
-  this.customType = function(typeName, customType) {
+  self.customType = function(typeName, customType) {
     var newCustomType = {};
     var validTypeName;
 
@@ -167,12 +167,12 @@ function Dream() {
     return self;
   };
 
-  this.cleanse = function() {
+  self.cleanse = function() {
     self._output = null;
     self._selectedSchema = null;
   };
 
-  this.output = function output(callback) {
+  self.output = function output(callback) {
     var output;
 
     output = self._output || generateOutput();
@@ -187,7 +187,7 @@ function Dream() {
 
   };
 
-  this.schema = function schema(schema) {
+  self.schema = function schema(schema) {
     var validatedSchema;
     var newSchema;
     var args = [];
@@ -219,7 +219,7 @@ function Dream() {
     return self;
   };
 
-  this.generate = function generate(amount, generateRandomData) {
+  self.generate = function generate(amount, generateRandomData) {
     var outputItem;
     var iterations = amount || 1;
     var outputArray = [];
@@ -236,7 +236,7 @@ function Dream() {
     return self;
   };
 
-  this.generateRnd = function generateRnd(amount) {
+  self.generateRnd = function generateRnd(amount) {
     return self.generate(amount, true);
   };
 
