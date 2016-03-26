@@ -312,6 +312,108 @@ Result:
 ]
 ```
 
+## From CLI
+Dreamjs can be used from CLI generating data from a `schema.js` in the current directory
+
+### Install globally
+```
+sudo npm install -g dreamjs
+```
+now you can call 
+
+```
+dream <schema_name> <repetitions> -f
+```
+
+### usage 
+- recommended have `NODE_PATH` set so you can include global modules
+- dreamjs can take 3 parameter in any order
+	- schema name
+	- repetitions
+	- and `-f` flag to fill fields or generate empty fields
+- Create a new `schema.js` file somewhere 
+	- define define your schemas and custome fields in this file
+
+```javascript
+// schema.js
+
+// This will include the globally installed dreamjs which required NODE_PATH to be set
+// or include from local install
+var dream = require('dreamjs'); 
+
+dream.customType('pi', function () {
+  return Math.PI;
+});
+
+dream.customType('incrementalId', function(helper){
+    return helper.previousItem ? helper.previousItem.id+1 : 1;
+});
+
+dream.schema('user', {
+	id: 'incrementalId',
+	name: 'name',
+	age: 'age',
+	piField: 'pi'
+});
+```
+
+now in the same directoy as your schema.js
+
+```
+$ dream user 4 -f
+
+[
+    {
+        "id": 1,
+        "name": "Marie Lloyd",
+        "age": 20
+    },
+    {
+        "id": 2,
+        "name": "Isabella Page",
+        "age": 44
+    },
+    {
+        "id": 3,
+        "name": "Evan Barrett",
+        "age": 21
+    },
+    {
+        "id": 4,
+        "name": "David Dawson",
+        "age": 41
+    }
+]
+```
+
+without `-f` flag
+
+```
+$ dream user 4
+[
+    {
+        "id": 0,
+        "name": "",
+        "age": 0
+    },
+    {
+        "id": 0,
+        "name": "",
+        "age": 0
+    },
+    {
+        "id": 0,
+        "name": "",
+        "age": 0
+    },
+    {
+        "id": 0,
+        "name": "",
+        "age": 0
+    }
+]
+```
+
 ## TODO
 
 The next step is to update DreamJS to allow the use with promises and streams.
