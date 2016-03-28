@@ -7,6 +7,9 @@
   "scripts": {
     "test": "mocha"
   },
+  "bin": {
+    "dream": "./cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adleroliveira/dreamjs.git"
