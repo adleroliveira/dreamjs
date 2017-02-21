@@ -90,8 +90,8 @@ function Dream() {
     return dreamInstance;
   };
 
-  self.input = function input(input) {
-    self._dreamHelper.input = input;
+  self.input = function input(value) {
+    self._dreamHelper.input = value;
     return (self);
   };
 
@@ -187,7 +187,7 @@ function Dream() {
 
   };
 
-  self.schema = function schema(schema) {
+  self.schema = function schema(value) {
     var validatedSchema;
     var newSchema;
     var args = [];
@@ -200,7 +200,7 @@ function Dream() {
         schema: typeof (args[0]) === 'object' ? args.shift() : {}
       };
     } else {
-      newSchema = schema;
+      newSchema = value;
     }
 
     validatedSchema = validateAndReturnSchema(newSchema);
