@@ -3,3 +3,4 @@ node_modules/
 tsd.json
 typings/
 v2/
+/nbproject/private/
