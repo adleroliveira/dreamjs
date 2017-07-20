@@ -287,7 +287,7 @@ function Dream() {
     if (isValidSchema(schema)) return schema;
 
     if (typeof (schema) === 'string') {
-      var foundSchema = _.findWhere(_schemas, { name: schema });
+      var foundSchema = _.find(_schemas, { name: schema });
       return isValidSchema(foundSchema) ? foundSchema : _genericSchema;
     }
 
