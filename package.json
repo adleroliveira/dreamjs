@@ -29,10 +29,10 @@
   "homepage": "https://github.com/adleroliveira/dreamjs#readme",
   "dependencies": {
     "chai": "^3.4.1",
-    "chance": "^0.8.0",
+    "chance": "^1.0.8",
     "describe-json": "0.0.6",
-    "lodash": "^3.10.1",
-    "mocha": "^2.3.4",
+    "lodash": "^4.17.1",
+    "mocha": "^6.0.2",
     "randexp": "^0.4.1"
   }
 }
