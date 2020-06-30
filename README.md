@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/adleroliveira/dreamjs.svg?branch=master)](https://travis-ci.org/adleroliveira/dreamjs)
 
-# [![Dream Logo](http://www.bodamarket.cl/small_dream_logo.png)](https://github.com/adleroliveira/dreamjs)
+# [![Dream Logo](https://d3bw40wmlrvrtr.cloudfront.net/dreamjs.png)](https://github.com/adleroliveira/dreamjs)
 
 #### A lightweight json data generator.
 
